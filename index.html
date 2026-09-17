@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<title>Apoio Operacional — Protótipo</title>
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--text:#17202a;--muted:#68737d;--line:#e3e7eb;--accent:#7a1f2b;--green:#198754;--yellow:#d99a00;--red:#c0392b;--blue:#2457d6}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+header{background:linear-gradient(135deg,#651923,#8d2634);color:#fff;padding:18px 22px;position:sticky;top:0;z-index:5}
+.top{max-width:1180px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{font-weight:800;font-size:20px}.sub{font-size:12px;opacity:.8;margin-top:3px}
+button,select,input,textarea{font:inherit} button{border:0;cursor:pointer}.nav button{background:#ffffff18;color:#fff;border:1px solid #ffffff25;border-radius:10px;padding:9px 12px;margin-left:6px}
+main{max-width:1180px;margin:24px auto;padding:0 18px}.view{display:none}.view.active{display:block}
+.hero{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:18px}.hero h1{margin:0 0 6px;font-size:28px}.hero p{margin:0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 5px 18px #00000008}.card h2,.card h3{margin:0 0 14px}.env{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:15px;margin-bottom:15px}.tag{font-size:12px;background:#f0e4e6;color:var(--accent);padding:7px 10px;border-radius:999px;font-weight:700}
+label{display:block;font-size:13px;font-weight:700;margin:12px 0 7px}select,input,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--text)}textarea{min-height:90px;resize:vertical}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:9px}.check{border:1px solid var(--line);padding:11px;border-radius:10px;display:flex;gap:9px;align-items:center;background:#fafbfc}.check input{width:auto}
+.status{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.status label{margin:0}.status input{display:none}.status span{display:block;text-align:center;padding:12px;border:1px solid var(--line);border-radius:10px;font-weight:700}.status input:checked+span{outline:3px solid #0001}.s-green{color:var(--green)}.s-yellow{color:var(--yellow)}.s-red{color:var(--red)}
+.photo{border:2px dashed #cfd6dc;border-radius:12px;padding:18px;text-align:center;color:var(--muted);cursor:pointer}.photo input{display:none}.preview{max-width:100%;max-height:180px;border-radius:10px;margin-top:10px;display:none}
+.primary{width:100%;background:var(--accent);color:#fff;padding:13px;border-radius:11px;font-weight:800;margin-top:15px}.secondary{background:#eef1f4;padding:10px 13px;border-radius:10px;font-weight:700}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}.metric{background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px}.metric b{font-size:27px;display:block}.metric small{color:var(--muted)}
+.progress{height:8px;background:#edf0f2;border-radius:99px;overflow:hidden;margin:8px 0}.bar{height:100%;background:var(--accent);width:78%}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line);font-size:13px}th{color:var(--muted);font-size:12px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}.green{background:#198754}.yellow{background:#d99a00}.red{background:#c0392b}
+.kpi{display:flex;justify-content:space-between;gap:10px;margin:10px 0}.mini{color:var(--muted);font-size:12px}
+.toast{position:fixed;right:20px;bottom:20px;background:#17202a;color:#fff;padding:13px 16px;border-radius:12px;display:none;z-index:20;box-shadow:0 10px 30px #0003}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.top{align-items:flex-start}.nav{white-space:nowrap}.checks{grid-template-columns:1fr}.hero{align-items:flex-start;flex-direction:column}}
+
+.appnav{max-width:1180px;margin:0 auto 18px;display:flex;gap:8px;flex-wrap:wrap}
+.tab{background:#fff;border:1px solid var(--line);padding:10px 14px;border-radius:10px;font-weight:700;color:var(--text)}
+.tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+.quickbtn{background:#f8f9fa;border:1px solid var(--line);border-radius:13px;padding:16px;text-align:left;font-size:24px;display:grid;grid-template-columns:32px 1fr;gap:2px;align-items:center}
+.quickbtn span{font-size:14px;font-weight:800}.quickbtn small{grid-column:2;color:var(--muted);font-size:11px}
+.envgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.envcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px}
+.qrbox{width:110px;height:110px;margin:12px 0;display:grid;place-items:center;border:7px solid #17202a;background:repeating-linear-gradient(45deg,#17202a 0 4px,#fff 4px 8px);color:#fff;font-weight:900;text-shadow:0 1px 2px #000}
+.envcard button{background:var(--accent);color:#fff;padding:10px 13px;border-radius:9px;font-weight:700}
+@media(max-width:800px){.envgrid{grid-template-columns:1fr}.quick{grid-template-columns:1fr}}
+
+@media print{
+ body{background:#fff}.appnav,header,main>.view:not(#ambientes),.envcard button,.no-print{display:none!important}
+ #ambientes{display:block!important}.envgrid{grid-template-columns:repeat(2,1fr);gap:20px}
+ .envcard{break-inside:avoid;text-align:center}.qrbox{margin:12px auto}
+}
+.qr-real{width:150px;height:150px;margin:14px auto;display:flex;align-items:center;justify-content:center;background:#fff}
+.qr-real img,.qr-real canvas{max-width:150px!important;max-height:150px!important}
+.qr-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.qr-actions button{background:#eef1f4;color:var(--text);padding:9px 11px;border-radius:9px;font-weight:700}
+</style>
+</head>
+<body>
+<header><div class="top"><div><div class="brand">APOIO OPERACIONAL</div><div class="sub">Protótipo de rotina, evidências e ocorrências</div></div><div class="nav"><button onclick="show('rotina')">Rotina</button><button onclick="show('painel')">Painel</button></div></div></header>
+
+
+<main>
+<div class="appnav">
+  <button class="tab active" onclick="show('inicio',this)">🏠 Início</button>
+  <button class="tab" onclick="show('rotina',this)">🧹 Nova rotina</button>
+  <button class="tab" onclick="show('ambientes',this)">🏢 Ambientes</button>
+  <button class="tab" onclick="show('painel',this)">📊 Painel</button>
+</div>
+
+<section id="inicio" class="view active">
+<div class="hero"><div><h1>Central de Apoio</h1><p>Rotinas, conservação e ocorrências em um só lugar.</p></div></div>
+<div class="metrics">
+<div class="metric"><b>154</b><small>Rotinas previstas hoje</small></div>
+<div class="metric"><b id="done">128</b><small>Concluídas</small></div>
+<div class="metric"><b>21</b><small>Em andamento</small></div>
+<div class="metric"><b id="occ">09</b><small>Ocorrências</small></div>
+</div>
+<div class="grid">
+<div class="card">
+<h2>Começar uma rotina</h2>
+<p class="mini">Escolha um ambiente ou simule a leitura do QR Code.</p>
+<div class="quick">
+<button class="quickbtn" onclick="abrirAmbiente('BA-001')">🚻<span>Banheiro A</span><small>BA-001</small></button>
+<button class="quickbtn" onclick="abrirAmbiente('SL-001')">🏫<span>Sala 01</span><small>SL-001</small></button>
+<button class="quickbtn" onclick="abrirAmbiente('BL-001')">📚<span>Biblioteca</span><small>BL-001</small></button>
+<button class="quickbtn" onclick="abrirAmbiente('AE-001')">🌳<span>Área externa</span><small>AE-001</small></button>
+</div>
+</div>
+<div class="card">
+<h2>Últimas atividades</h2>
+<div id="recent"></div>
+</div>
+</div>
+</section>
+
+<section id="rotina" class="view">
+<div class="hero"><div><h1>Rotina de Cuidado do Ambiente</h1><p>QR Code identificado: <b id="qrcode">BA-001</b></p></div><span class="tag" id="ambienteTag">Banheiro — Bloco A</span></div>
+<div class="grid">
+<div class="card">
+<div class="env"><div><h2 id="ambienteTitulo">Banheiro — Bloco A</h2><div class="mini">A rotina é vinculada automaticamente ao ambiente.</div></div><span class="tag">CHECKLIST</span></div>
+<label>Colaborador</label><select id="colab"><option>Maria Silva</option><option>João Santos</option><option>Ana Costa</option><option>Carlos Oliveira</option></select>
+<h3 style="margin-top:20px">Itens da rotina</h3>
+<div class="checks" id="checks"></div>
+</div>
+<div class="card">
+<h2>Condição encontrada</h2>
+<div class="status">
+<label><input type="radio" name="status" value="Normal" checked><span class="s-green">🟢 Normal</span></label>
+<label><input type="radio" name="status" value="Atenção"><span class="s-yellow">🟡 Atenção</span></label>
+<label><input type="radio" name="status" value="Problema"><span class="s-red">🔴 Problema</span></label>
+</div>
+<label>Categoria da ocorrência</label>
+<select id="cat"><option>Nenhuma</option><option>Hidráulica</option><option>Elétrica</option><option>Predial</option><option>Climatização</option><option>Mobiliário</option><option>Limpeza</option><option>Segurança</option><option>Outro</option></select>
+<label>Descrição</label><textarea id="desc" placeholder="Descreva o que encontrou..."></textarea>
+<label>📷 Evidência</label>
+<label class="photo">Adicionar foto<input id="foto" type="file" accept="image/*" capture="environment"></label>
+<img id="preview" class="preview">
+<button class="primary" onclick="finalizar()">✓ FINALIZAR ROTINA</button>
+</div>
+</div>
+</section>
+
+<section id="ambientes" class="view">
+<div class="hero"><div><h1>Ambientes e QR Codes</h1><p>Um código por ambiente para iniciar a rotina.</p></div></div>
+<div class="envgrid" id="envgrid"></div>
+</section>
+
+<section id="painel" class="view">
+<div class="hero"><div><h1>Painel da Supervisão</h1><p>Visão geral das atividades do dia.</p></div></div>
+<div class="metrics">
+<div class="metric"><b>83%</b><small>Execução das rotinas</small></div>
+<div class="metric"><b id="pdone">128</b><small>Rotinas realizadas</small></div>
+<div class="metric"><b>37</b><small>Evidências</small></div>
+<div class="metric"><b id="pocc">09</b><small>Ocorrências</small></div>
+</div>
+<div class="grid">
+<div class="card"><h2>Desempenho por área</h2>
+<div class="kpi"><span>Banheiros</span><b>92%</b></div><div class="progress"><div class="bar" style="width:92%"></div></div>
+<div class="kpi"><span>Salas</span><b>81%</b></div><div class="progress"><div class="bar" style="width:81%"></div></div>
+<div class="kpi"><span>Biblioteca</span><b>96%</b></div><div class="progress"><div class="bar" style="width:96%"></div></div>
+<div class="kpi"><span>Áreas externas</span><b>76%</b></div><div class="progress"><div class="bar" style="width:76%"></div></div>
+</div>
+<div class="card"><h2>Ocorrências recentes</h2><div id="occList"></div></div>
+</div>
+<div class="card" style="margin-top:18px"><h2>Histórico</h2>
+<table><thead><tr><th>Hora</th><th>Ambiente</th><th>Colaborador</th><th>Itens</th><th>Status</th><th>Ocorrência</th></tr></thead>
+<tbody id="historico"></tbody></table>
+</div>
+</section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const ambientes={
+ 'BA-001':{nome:'Banheiro — Bloco A',tipo:'Banheiro',itens:['Limpeza realizada','Papel higiênico','Papel toalha','Sabonete','Lixeiras','Torneiras','Descargas','Iluminação','Piso','Odor']},
+ 'BB-001':{nome:'Banheiro — Bloco B',tipo:'Banheiro',itens:['Limpeza realizada','Papel higiênico','Papel toalha','Sabonete','Lixeiras','Torneiras','Descargas','Iluminação','Piso','Odor']},
+ 'SL-001':{nome:'Sala 01',tipo:'Sala',itens:['Limpeza','Organização','Carteiras e mesas','Quadro','Iluminação','Ar-condicionado','Piso','Porta e fechadura']},
+ 'BL-001':{nome:'Biblioteca',tipo:'Biblioteca',itens:['Limpeza','Organização','Estantes','Piso','Iluminação','Climatização','Odor','Sinais de umidade']},
+ 'AE-001':{nome:'Área externa',tipo:'Área externa',itens:['Limpeza','Lixeiras','Piso','Drenagem','Iluminação','Vegetação','Objetos fora do lugar','Segurança']}
+};
+let atual='BA-001', registros=[
+ {hora:'13:20',amb:'Banheiro — Bloco B',col:'João Santos',itens:'10/10',status:'Normal',oc:'—'},
+ {hora:'12:55',amb:'Sala 08',col:'Ana Costa',itens:'8/8',status:'Atenção',oc:'Iluminação'},
+ {hora:'12:30',amb:'Banheiro — Bloco A',col:'Maria Silva',itens:'10/10',status:'Normal',oc:'—'}
+];
+
+function show(id,btn){
+ document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+ if(btn)btn.classList.add('active');
+ renderAll();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function makeURL(cod){
+  // URL real quando publicado. No protótipo, usa a própria página com ?ambiente=COD.
+  return window.location.href.split('?')[0]+'?ambiente='+encodeURIComponent(cod);
+}
+function imprimirQR(cod){
+  const a=ambientes[cod];
+  const w=window.open('','_blank','width=500,height=650');
+  w.document.write(`<html><head><title>QR ${cod}</title><style>body{font-family:Arial;text-align:center;padding:30px}h1{font-size:22px}.box{margin:25px auto;width:260px}img{width:260px}p{color:#555}</style></head><body><h1>APOIO OPERACIONAL</h1><div class="box" id="q"></div><h2>${a.nome}</h2><p>Código: ${cod}</p><p>Escaneie este QR Code para iniciar a rotina do ambiente.</p></body></html>`);
+  w.document.close();
+  setTimeout(()=>{new w.QRCode(w.document.getElementById('q'),{text:makeURL(cod),width:260,height:260});setTimeout(()=>w.print(),300)},100);
+}
+function abrirPorURL(){
+  const cod=new URLSearchParams(location.search).get('ambiente');
+  if(cod && ambientes[cod]) abrirAmbiente(cod);
+}
+function abrirAmbiente(cod){
+ atual=cod; const a=ambientes[cod];
+ document.getElementById('qrcode').textContent=cod;
+ document.getElementById('ambienteTag').textContent=a.nome;
+ document.getElementById('ambienteTitulo').textContent=a.nome;
+ document.getElementById('checks').innerHTML=a.itens.map((x,i)=>`<label class="check"><input type="checkbox" data-item="${i}"> ${x}</label>`).join('');
+ document.getElementById('cat').value='Nenhuma';document.getElementById('desc').value='';
+ document.querySelector('input[name=status][value="Normal"]').checked=true;
+ show('rotina',document.querySelectorAll('.tab')[1]);
+}
+function finalizar(){
+ const a=ambientes[atual], checks=[...document.querySelectorAll('#checks input')].filter(x=>x.checked).length;
+ const status=document.querySelector('input[name=status]:checked').value;
+ const cat=document.getElementById('cat').value, desc=document.getElementById('desc').value;
+ const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+ const col=document.getElementById('colab').value;
+ registros.unshift({hora:now,amb:a.nome,col,itens:`${checks}/${a.itens.length}`,status,oc:cat==='Nenhuma'?(desc||'—'):cat});
+ document.getElementById('done').textContent=129;document.getElementById('pdone').textContent=129;
+ if(status!=='Normal'){document.getElementById('occ').textContent='10';document.getElementById('pocc').textContent='10'}
+ const t=document.getElementById('toast');t.textContent=`✓ Rotina registrada • ${checks}/${a.itens.length} itens • ${status}`;t.style.display='block';
+ setTimeout(()=>t.style.display='none',3000); renderAll();
+}
+function renderAll(){
+ document.getElementById('historico').innerHTML=registros.slice(0,12).map(r=>`<tr><td>${r.hora}</td><td>${r.amb}</td><td>${r.col}</td><td>${r.itens}</td><td><i class="dot ${r.status==='Normal'?'green':r.status==='Atenção'?'yellow':'red'}"></i>${r.status}</td><td>${r.oc}</td></tr>`).join('');
+ document.getElementById('recent').innerHTML=registros.slice(0,4).map(r=>`<div class="kpi"><span>${r.amb}<br><small>${r.col} • ${r.hora}</small></span><b>${r.status}</b></div>`).join('');
+ document.getElementById('occList').innerHTML=registros.filter(r=>r.oc!=='—').slice(0,5).map(r=>`<div class="kpi"><span><i class="dot ${r.status==='Problema'?'red':'yellow'}"></i>${r.amb}<br><small>${r.oc}</small></span><b>${r.status}</b></div>`).join('')||'<p class="mini">Nenhuma ocorrência recente.</p>';
+ document.getElementById('envgrid').innerHTML=Object.entries(ambientes).map(([c,a])=>`<div class="envcard"><span class="tag">${c}</span><h2 style="margin:12px 0 4px">${a.nome}</h2><div class="mini">${a.tipo} • ${a.itens.length} itens</div><div class="qr-real" id="qr-${c}"></div><div class="mini">Escaneie para abrir a rotina deste ambiente</div><div class="qr-actions no-print"><button onclick="abrirAmbiente('${c}')">Abrir rotina</button><button onclick="imprimirQR('${c}')">🖨️ Imprimir</button></div></div>`).join('');
+ Object.keys(ambientes).forEach(c=>{
+   const el=document.getElementById('qr-'+c);
+   if(el && window.QRCode) new QRCode(el,{text:makeURL(c),width:150,height:150,correctLevel:QRCode.CorrectLevel.M});
+ });
+}
+document.getElementById('foto').addEventListener('change',e=>{const f=e.target.files[0];if(f){const p=document.getElementById('preview');p.src=URL.createObjectURL(f);p.style.display='block';}});
+abrirAmbiente(new URLSearchParams(location.search).get('ambiente') || 'BA-001');renderAll();
+</script>
+
+</body>
+</html>
