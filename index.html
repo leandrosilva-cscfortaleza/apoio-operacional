@@ -246,9 +246,23 @@ async function finalizar(){
    else console.error(ocErr);
  }
 
- // Foto: nesta versão, só registramos a rotina. O armazenamento de fotos será ativado na próxima etapa.
+ // Evidência fotográfica: envia a foto ao Supabase Storage e registra a URL em evidencias.
+ let fotoSalva=false;
  if(file){
-   console.log('Foto selecionada:',file.name,'— upload será ativado na etapa de evidências.');
+   try{
+     const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'');
+     const nomeSeguro=(file.name.replace(/[^a-zA-Z0-9._-]/g,'_').slice(-80) || 'evidencia');
+     const path=`rotinas/${rot.id}/${Date.now()}-${nomeSeguro}.${ext}`;
+     const {error:upErr}=await sb.storage.from('evidencias').upload(path,file,{contentType:file.type||'image/jpeg',upsert:false});
+     if(upErr) throw upErr;
+     const {data:pub}=sb.storage.from('evidencias').getPublicUrl(path);
+     const {error:evErr}=await sb.from('evidencias').insert({rotina_id:rot.id,arquivo_url:pub.publicUrl});
+     if(evErr) throw evErr;
+     fotoSalva=true;
+   }catch(photoErr){
+     console.error('Falha ao salvar evidência:',photoErr);
+     alert('A rotina foi registrada, mas a foto não foi salva. Verifique as políticas de evidências/Storage.');
+   }
  }
 
  const now=new Date(rot.realizado_em||Date.now()).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
@@ -256,7 +270,7 @@ async function finalizar(){
  document.getElementById('done').textContent=129;
  document.getElementById('pdone').textContent=129;
  if(statusUI!=='Normal'){document.getElementById('occ').textContent='10';document.getElementById('pocc').textContent='10';}
- const t=document.getElementById('toast');t.textContent=`✓ Salvo no banco • ${checked}/${a.itens.length} itens • ${statusUI}`;t.style.display='block';
+ const t=document.getElementById('toast');t.textContent=`✓ Salvo no banco • ${checked}/${a.itens.length} itens • ${statusUI}${fotoSalva?' • 📸 foto salva':''}`;t.style.display='block';
  setTimeout(()=>t.style.display='none',3500);
  renderAll();
 }
