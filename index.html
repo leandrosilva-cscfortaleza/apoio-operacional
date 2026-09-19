@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Apoio Operacional</title>
+<title>Apoio Operacional • V11 consolidada</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
@@ -144,7 +144,7 @@ th{color:#7b8490;font-size:11px;text-transform:uppercase;letter-spacing:.5px;bac
 .attention-meta{font-size:11px;color:var(--muted);font-weight:700}
 @media(max-width:900px){.attention-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.attention-grid{grid-template-columns:1fr}}
-.mini{color:var(--muted);font-size:12px}.empty{padding:27px;text-align:center;color:var(--muted)}
+.mini{color:var(--muted);font-size:12px}.countBadge{min-width:54px;justify-content:center}.empty{padding:27px;text-align:center;color:var(--muted)}
 .toast{
  position:fixed;right:22px;bottom:22px;max-width:440px;background:#101820;color:#fff;padding:15px 18px;
  border-radius:14px;display:none;z-index:200;box-shadow:0 15px 40px rgba(0,0,0,.25);font-weight:700
@@ -300,7 +300,7 @@ html.qr-mode #appMain{display:block!important}
     <div class="hero"><div><h1>Rotina de Cuidado do Ambiente</h1><p>QR Code identificado: <b id="qrcode">AGUARDANDO QR</b></p></div><span class="tag" id="ambienteTag">Ambiente não identificado</span></div>
     <div class="grid">
       <div class="card">
-        <div style="display:flex;justify-content:space-between;gap:15px"><div><h2 id="ambienteTitulo">Aguardando identificação do ambiente</h2><div class="mini">A rotina é vinculada automaticamente ao ambiente.</div></div><span class="tag">CHECKLIST</span></div>
+        <div style="display:flex;justify-content:space-between;gap:15px"><div><h2 id="ambienteTitulo">Aguardando identificação do ambiente</h2><div class="mini">A rotina é vinculada automaticamente ao ambiente.</div></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="tag">CHECKLIST</span><span class="tag" id="countBadge">0/0</span></div></div>
         <label>Colaborador</label><select id="colab"></select>
         <h3>Itens da rotina</h3><div class="checks" id="checks"></div>
       </div>
@@ -361,13 +361,11 @@ html.qr-mode #appMain{display:block!important}
 <script>
 const SUPABASE_URL='https://krsbboedhfczbjgkueqx.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_tSEpXf4Kw6igC7YQYelM5w_44OXYlxp';
-let sb=null;
-function getSB(){
-  if(!sb && window.supabase?.createClient){
-    sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-  }
-  return sb;
-}
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+
+// Helpers centrais: a aplicação nunca depende de funções externas para identificar o modo.
+function getSB(){ return sb; }
+function isQRMode(){ return !!obterCodigoQR(); }
 
 const ambientes={
  'BA-001':{nome:'Banheiro — Bloco A',tipo:'Banheiro',itens:['Limpeza realizada','Papel higiênico','Papel toalha','Sabonete','Lixeiras','Torneiras','Descargas','Iluminação','Piso','Odor']},
@@ -376,20 +374,24 @@ const ambientes={
  'BL-001':{nome:'Biblioteca',tipo:'Biblioteca',itens:['Limpeza','Organização','Estantes','Piso','Iluminação','Climatização','Odor','Sinais de umidade']},
  'AE-001':{nome:'Área externa',tipo:'Área externa',itens:['Limpeza','Lixeiras','Piso','Drenagem','Iluminação','Vegetação','Objetos fora do lugar','Segurança']}
 };
-let atual='', cache={rotinas:[],ocorrencias:[],evidencias:[],ambientes:[],colaboradores:[]};
+let atual='BA-001', cache={rotinas:[],ocorrencias:[],evidencias:[],ambientes:[],colaboradores:[]};
 
 function setDBStatus(text,cls){const e=document.getElementById('dbStatus');e.textContent='● '+text;e.className=cls||''}
 async function testarBanco(){
   const client=getSB();
-  if(!client){setDBStatus('modo local • banco aguardando','dbwait');return false}
+  if(!client){setDBStatus('banco indisponível','dbwait');return false}
   try{
-    const {error}=await client.from('ambientes').select('id').limit(1);
-    if(error)throw error;
+    const [a,c]=await Promise.all([
+      client.from('ambientes').select('id').limit(1),
+      client.from('colaboradores').select('id').eq('ativo',true).limit(1)
+    ]);
+    if(a.error)throw a.error;
+    if(c.error)throw c.error;
     setDBStatus('banco conectado','dbok');
     return true;
   }catch(e){
     console.warn('Banco indisponível no momento:',e);
-    setDBStatus('banco aguardando políticas','dbwait');
+    setDBStatus('verificar políticas do banco','dbwait');
     return false;
   }
 }
@@ -433,7 +435,11 @@ function abrirAmbiente(cod){
   if(qr) qr.textContent=cod;
   if(tag) tag.textContent=a.nome;
   if(title) title.textContent=a.nome;
-  if(checks) checks.innerHTML=a.itens.map((x,i)=>`<label class="check"><input type="checkbox" data-item="${i}"> ${x}</label>`).join('');
+  if(checks){
+    checks.innerHTML=a.itens.map((x,i)=>`<label class="check"><input type="checkbox" data-item="${i}"> ${x}</label>`).join('');
+    checks.querySelectorAll('input').forEach(el=>el.addEventListener('change',atualizarContador));
+  }
+  atualizarContador();
   const cat=document.getElementById('cat'); if(cat) cat.value='Nenhuma';
   const desc=document.getElementById('desc'); if(desc) desc.value='';
   const foto=document.getElementById('foto'); if(foto) foto.value='';
@@ -444,15 +450,20 @@ function abrirAmbiente(cod){
   show('rotina',null);
   return true;
 }
+function atualizarContador(){
+  const total=document.querySelectorAll('#checks input').length;
+  const feitos=document.querySelectorAll('#checks input:checked').length;
+  const badge=document.getElementById('countBadge');
+  if(badge) badge.textContent=`${feitos}/${total}`;
+}
+
 function imprimirQR(cod){const a=ambientes[cod],w=window.open('','_blank','width=500,height=650');w.document.write(`<html><head><title>QR ${cod}</title><style>body{font-family:Arial;text-align:center;padding:30px}.box{margin:25px auto;width:260px}</style><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script></head><body><h1>APOIO OPERACIONAL</h1><div class="box" id="q"></div><h2>${a.nome}</h2><p>Código: ${cod}</p><p>Escaneie para iniciar a rotina.</p></body></html>`);w.document.close();setTimeout(()=>{new w.QRCode(w.document.getElementById('q'),{text:makeURL(cod),width:260,height:260});setTimeout(()=>w.print(),300)},300)}
 
 async function carregarCadastros(){
-  if(!getSB()){ console.warn('Supabase indisponível; operação adiada.'); return false; }
-
   try{
     const [a,c]=await Promise.all([
-      getSB()?.from('ambientes').select('id,codigo,nome,tipo'),
-      getSB()?.from('colaboradores').select('id,nome,cargo')
+      sb.from('ambientes').select('id,codigo,nome,tipo'),
+      sb.from('colaboradores').select('id,nome,identificacao,funcao').eq('ativo',true).order('nome')
     ]);
     if(a.error) throw a.error;
     if(c.error) throw c.error;
@@ -464,16 +475,19 @@ async function carregarCadastros(){
     if(fColab) fColab.innerHTML='<option value="">Todos</option>'+cache.colaboradores.map(x=>`<option value="${x.id}">${x.nome}</option>`).join('');
     const fAmb=document.getElementById('fAmb');
     if(fAmb) fAmb.innerHTML='<option value="">Todos</option>'+cache.ambientes.map(x=>`<option value="${x.id}">${x.nome}</option>`).join('');
-  }catch(e){ console.warn('Cadastros indisponíveis no momento:',e); }
+  }catch(e){
+    console.error('Cadastros indisponíveis no momento:',e);
+    const sel=document.getElementById('colab');
+    if(sel) sel.innerHTML='<option value="">Não foi possível carregar os colaboradores</option>';
+    toast('Não foi possível carregar os colaboradores. Verifique a política SELECT de colaboradores.');
+  }
 }
 async function carregarDados(){
-  if(!getSB()){ console.warn('Supabase indisponível; operação adiada.'); return false; }
-
   try{
     const [r,o,e]=await Promise.all([
-      getSB()?.from('rotinas').select('id,ambiente_id,colaborador_id,status,itens_realizados,itens_total,observacao,realizado_em').order('realizado_em',{ascending:false}).limit(500),
-      getSB()?.from('ocorrencias').select('id,ambiente_id,colaborador_id,categoria,descricao,prioridade,status').order('id',{ascending:false}).limit(500),
-      getSB()?.from('evidencias').select('id,rotina_id,ocorrencia_id,arquivo_url,criado_em').order('criado_em',{ascending:false}).limit(500)
+      sb.from('rotinas').select('id,ambiente_id,colaborador_id,status,itens_realizados,itens_total,observacao,realizado_em').order('realizado_em',{ascending:false}).limit(500),
+      sb.from('ocorrencias').select('id,ambiente_id,colaborador_id,categoria,descricao,prioridade,status').order('id',{ascending:false}).limit(500),
+      sb.from('evidencias').select('id,rotina_id,ocorrencia_id,arquivo_url,criado_em').order('criado_em',{ascending:false}).limit(500)
     ]);
     if(r.error) console.warn(r.error);
     if(o.error) console.warn(o.error);
@@ -490,30 +504,81 @@ function formatHora(d){if(!d)return'—';return new Date(d).toLocaleTimeString('
 function formatData(d){if(!d)return'';return new Date(d).toLocaleDateString('pt-BR')}
 
 async function finalizar(){
- const btn=document.getElementById('finalBtn');btn.disabled=true;
+ const btn=document.getElementById('finalBtn');
+ btn.disabled=true;
  try{
-  if(!atual || !ambientes[atual]){alert('QR Code inválido. Não é possível finalizar esta rotina.');return;} const a=ambientes[atual],checked=[...document.querySelectorAll('#checks input')].filter(x=>x.checked).length;
-  const statusUI=document.querySelector('input[name=status]:checked').value,status=statusUI.toLowerCase();
-  const cat=document.getElementById('cat').value,desc=document.getElementById('desc').value.trim();
-  const colabId=document.getElementById('colab').value,file=document.getElementById('foto').files[0]; if(!colabId){alert('Selecione o colaborador antes de finalizar.');return;}
-  const {data:amb,error:ambErr}=await getSB().from('ambientes').select('id').eq('codigo',atual).single();if(ambErr)throw ambErr;
-  const {data:rot,error:rotErr}=await getSB().from('rotinas').insert({ambiente_id:amb.id,colaborador_id:colabId,status,itens_realizados:checked,itens_total:a.itens.length,observacao:desc||null}).select('id,realizado_em').single();if(rotErr)throw rotErr;
+  if(!atual || !ambientes[atual]) throw new Error('QR Code inválido.');
+  const a=ambientes[atual];
+  const itens=[...document.querySelectorAll('#checks input')];
+  const checked=itens.filter(x=>x.checked).length;
+  const statusUI=document.querySelector('input[name=status]:checked')?.value||'Normal';
+  const status=statusUI.toLowerCase();
+  const cat=document.getElementById('cat').value;
+  const desc=document.getElementById('desc').value.trim();
+  const colabId=document.getElementById('colab').value;
+  const file=document.getElementById('foto').files[0];
+
+  if(!colabId){ alert('Selecione o colaborador antes de finalizar.'); return; }
+  if(!itens.length){ alert('Este ambiente não possui checklist configurado.'); return; }
+
+  const client=getSB();
+  if(!client) throw new Error('Banco indisponível.');
+
+  const {data:amb,error:ambErr}=await client.from('ambientes').select('id').eq('codigo',atual).single();
+  if(ambErr) throw new Error('Ambiente não encontrado no banco: '+ambErr.message);
+
+  // A rotina é criada primeiro porque a evidência precisa apontar para ela.
+  const {data:rot,error:rotErr}=await client.from('rotinas').insert({
+    ambiente_id:amb.id,
+    colaborador_id:Number(colabId),
+    status,
+    itens_realizados:checked,
+    itens_total:a.itens.length,
+    observacao:desc||null
+  }).select('id,realizado_em').single();
+  if(rotErr) throw new Error('Não foi possível salvar a rotina: '+rotErr.message);
+
+  let ocorrenciaSalva=false;
   if(cat!=='Nenhuma'||status!=='normal'){
-   const prioridade=status==='problema'?'alta':status==='atenção'?'media':'baixa';
-   const {error}=await getSB().from('ocorrencias').insert({ambiente_id:amb.id,colaborador_id:colabId,categoria:cat==='Nenhuma'?'Observação':cat,descricao:desc||'Ocorrência registrada durante a rotina.',prioridade,status:'aberta'});if(error)console.error(error);
+    const prioridade=status==='problema'?'alta':status==='atenção'?'media':'baixa';
+    const {data:oc,error:ocErr}=await client.from('ocorrencias').insert({
+      ambiente_id:amb.id,
+      colaborador_id:Number(colabId),
+      categoria:cat==='Nenhuma'?'Observação':cat,
+      descricao:desc||'Ocorrência registrada durante a rotina.',
+      prioridade,
+      status:'aberta'
+    }).select('id').single();
+    if(ocErr) throw new Error('A rotina foi salva, mas a ocorrência não pôde ser registrada: '+ocErr.message);
+    ocorrenciaSalva=!!oc;
   }
+
   let fotoSalva=false;
   if(file){
-   const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
-   const nome=file.name.replace(/[^a-zA-Z0-9._-]/g,'_').slice(-80)||'evidencia';
-   const path=`rotinas/${rot.id}/${Date.now()}-${nome}.${ext}`;
-   const {error:upErr}=await getSB()?.storage.from('evidencias').upload(path,file,{contentType:file.type||'image/jpeg',upsert:false});if(upErr)throw upErr;
-   const {data:pub}=getSB()?.storage.from('evidencias').getPublicUrl(path);
-   const {error:evErr}=await getSB().from('evidencias').insert({rotina_id:rot.id,arquivo_url:pub.publicUrl});if(evErr)throw evErr;fotoSalva=true;
+    const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
+    const nome=(file.name.replace(/[^a-zA-Z0-9._-]/g,'_').slice(-70)||'evidencia');
+    const path=`rotinas/${rot.id}/${Date.now()}-${nome}.${ext}`;
+    const {error:upErr}=await client.storage.from('evidencias').upload(path,file,{contentType:file.type||'image/jpeg',upsert:false});
+    if(upErr) throw new Error('A rotina foi salva, mas a foto não pôde ser enviada ao Storage: '+upErr.message);
+    const {data:pub}=client.storage.from('evidencias').getPublicUrl(path);
+    const {error:evErr}=await client.from('evidencias').insert({rotina_id:rot.id,ocorrencia_id:null,arquivo_url:pub.publicUrl});
+    if(evErr){
+      await client.storage.from('evidencias').remove([path]);
+      throw new Error('A foto foi enviada, mas não pôde ser vinculada à rotina: '+evErr.message);
+    }
+    fotoSalva=true;
   }
-  toast(`✓ Salvo no banco • ${checked}/${a.itens.length} itens • ${statusUI}${fotoSalva?' • 📸 foto salva':''}`);
-  await carregarDados();renderHistorico();renderRecent();
- }catch(e){console.error(e);alert('Não foi possível registrar a rotina. Verifique as políticas do banco e o Storage.')}finally{btn.disabled=false}
+
+  toast(`✓ Rotina salva no banco • ${checked}/${a.itens.length} itens • ${statusUI}${ocorrenciaSalva?' • ocorrência registrada':''}${fotoSalva?' • 📸 foto salva':''}`);
+  await carregarDados();
+  renderHistorico();
+  renderRecent();
+ }catch(e){
+  console.error(e);
+  alert(e?.message||'Não foi possível registrar a rotina.');
+ }finally{
+  btn.disabled=false;
+ }
 }
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',4000)}
 
@@ -581,9 +646,6 @@ function obterCodigoQR(){
   const raw=new URLSearchParams(location.search).get('ambiente');
   if(!raw) return '';
   return raw.trim().toUpperCase().replace(/[.,;:!?]+$/,'');
-}
-function isQRMode(){
-  return !!obterCodigoQR();
 }
 function ativarModoQRVisual(){
   if(!obterCodigoQR()) return;
@@ -691,6 +753,8 @@ async function iniciar(){
       const colab=document.getElementById('colab');
       if(colab && cache.colaboradores.length){
         colab.innerHTML='<option value="">Selecione...</option>'+cache.colaboradores.map(x=>`<option value="${x.id}">${x.nome}</option>`).join('');
+      } else if(colab){
+        colab.innerHTML='<option value="">Nenhum colaborador disponível</option>';
       }
     }
     return;
