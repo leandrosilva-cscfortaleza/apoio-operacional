@@ -403,14 +403,6 @@ function show(id,btn){
     document.getElementById('appMain').style.display='none';
     return;
   }
-
-  // Supervisor: ao clicar em Rotina sem QR, carrega o ambiente atual.
-  // O ambiente inicial é BA-001; os demais podem ser abertos pelo painel de Ambientes.
-  if(id==='rotina' && supervisorAutenticado && !document.documentElement.classList.contains('qr-mode')){
-    if(!atual || !ambientes[atual]) atual='BA-001';
-    abrirAmbiente(atual);
-  }
-
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   const target=document.getElementById(id); if(target) target.classList.add('active');
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
