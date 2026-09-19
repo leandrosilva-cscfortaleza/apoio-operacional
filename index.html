@@ -134,7 +134,17 @@ th{color:#7b8490;font-size:11px;text-transform:uppercase;letter-spacing:.5px;bac
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px}.green{background:var(--green)}.yellow{background:var(--yellow)}.red{background:var(--danger)}
 .badge{padding:6px 9px;border-radius:999px;font-size:11px;font-weight:900;background:#f0f2f4}
 .badge.ok{color:var(--green);background:#e7f6ed}.badge.att{color:#946800;background:#fff4d2}.badge.prob{color:var(--danger);background:#fde8e9}
-.photo-link{color:var(--red);font-weight:800;text-decoration:none}.mini{color:var(--muted);font-size:12px}.empty{padding:27px;text-align:center;color:var(--muted)}
+.photo-link{color:var(--red);font-weight:800;text-decoration:none}
+.attention-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.attention{border:1px solid var(--line);border-radius:16px;padding:16px;background:#fff}
+.attention.problem{border-left:5px solid var(--danger)}
+.attention.warning{border-left:5px solid var(--yellow)}
+.attention-top{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.attention-title{font-weight:900}.attention-desc{margin:9px 0;color:#4b5563;font-size:13px;line-height:1.45}
+.attention-meta{font-size:11px;color:var(--muted);font-weight:700}
+@media(max-width:900px){.attention-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.attention-grid{grid-template-columns:1fr}}
+.mini{color:var(--muted);font-size:12px}.empty{padding:27px;text-align:center;color:var(--muted)}
 .toast{
  position:fixed;right:22px;bottom:22px;max-width:440px;background:#101820;color:#fff;padding:15px 18px;
  border-radius:14px;display:none;z-index:200;box-shadow:0 15px 40px rgba(0,0,0,.25);font-weight:700
@@ -149,21 +159,120 @@ th{color:#7b8490;font-size:11px;text-transform:uppercase;letter-spacing:.5px;bac
  .envgrid,.checks{grid-template-columns:1fr}.status{grid-template-columns:1fr}.filters{grid-template-columns:1fr}
  .card{padding:18px;border-radius:18px}.quick{grid-template-columns:1fr 1fr}
 }
+
+.access-gate{max-width:650px;margin:60px auto;text-align:center}
+.access-gate .card{padding:38px}
+.access-icon{font-size:48px;margin-bottom:10px}
+.access-gate h1{font-size:30px;margin:0 0 8px}.access-gate p{color:var(--muted);line-height:1.55}
+.supervisor-entry{display:none}
+
+/* CONTROLE DE ACESSO — QR DO COLABORADOR */
+html.qr-mode #accessGate{display:none!important}
+html.qr-mode #appMain{display:block!important}
+html.qr-mode header .nav{display:none!important}
+html.qr-mode #appMain>.tabs{display:none!important}
+html.qr-mode #appMain>.view{display:none!important}
+html.qr-mode #appMain>#rotina{display:block!important}
+html.supervisor-mode #accessGate{display:none!important}
+html.supervisor-mode #appMain{display:block!important}
+
+/* BLOQUEIO VISUAL DEFINITIVO DO MODO QR */
+html.qr-mode header .nav,
+html.qr-mode #appMain .tabs,
+html.qr-mode #appMain > #inicio,
+html.qr-mode #appMain > #ambientes,
+html.qr-mode #appMain > #painel,
+html.qr-mode #appMain > #supervisao,
+html.qr-mode .supervisor-entry {display:none!important}
+html.qr-mode #appMain{display:block!important}
+html.qr-mode #appMain > #rotina{display:block!important}
+html.qr-mode #qrModeLabel{display:block!important}
+
+#loginForm{max-width:420px;margin:0 auto;text-align:left}
+#loginForm .primary{text-align:center}
+#loginMsg.error{color:var(--danger);font-weight:800}
+#loginMsg.ok{color:var(--green);font-weight:800}
+html:not(.qr-mode):not(.supervisor-mode) header .nav{display:none!important}
+
+html:not(.supervisor-mode):not(.qr-mode) .tabs,
+html:not(.supervisor-mode):not(.qr-mode) header .nav,
+html:not(.supervisor-mode):not(.qr-mode) #appMain,
+html:not(.supervisor-mode):not(.qr-mode) .view{
+  display:none !important;
+}
+
+.access-gate{
+  min-height:calc(100vh - 122px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:40px 20px 70px;
+  box-sizing:border-box;
+}
+.access-gate .card{
+  width:min(560px,100%);
+  margin:0 auto;
+}
+
+html.qr-mode .tabs,
+html.qr-mode header .nav,
+html.qr-mode #inicio,
+html.qr-mode #ambientes,
+html.qr-mode #painel,
+html.qr-mode #supervisao,
+html.qr-mode .supervisor-entry{
+  display:none !important;
+}
+
+html.qr-mode #appMain .view:not(#rotina){display:none!important}
+html.qr-mode #appMain .tabs{display:none!important}
+html.qr-mode header .nav{display:none!important}
+
+html.qr-mode .tabs,
+html.qr-mode header .nav,
+html.qr-mode #appMain .view:not(#rotina),
+html.qr-mode #accessGate{display:none!important}
+html.qr-mode #appMain{display:block!important}
 </style>
 
+<script>
+(function(){
+  const qs=new URLSearchParams(window.location.search);
+  const cod=qs.get('ambiente');
+  if(cod){document.documentElement.classList.add('qr-mode');}
+  else if(false){document.documentElement.classList.add('supervisor-mode');}
+})();
+</script>
 </head>
 <body>
 <header>
   <div class="top">
     <div>
       <div class="brand">APOIO OPERACIONAL</div>
-      <div class="sub">Rotina, evidências e ocorrências • <span id="dbStatus">● conectando...</span></div>
+      <div class="sub">Rotina, evidências e ocorrências • <span id="dbStatus">● conectando...</span></div><div id="qrModeLabel" style="display:none;margin-top:5px;font-size:11px;font-weight:800;color:#ffd8de">MODO COLABORADOR • ACESSO PELO QR</div>
     </div>
-    <div class="nav"><button onclick="show('rotina')">Rotina</button><button onclick="show('painel')">Painel</button></div>
+    <div class="nav"><button onclick="show('rotina')">Rotina</button><button onclick="show('painel')">Painel</button><button onclick="sairSupervisao()">Sair</button></div>
   </div>
 </header>
 
-<main>
+
+<div id="accessGate" class="access-gate">
+  <div class="card">
+    <div class="access-icon">🔐</div>
+    <h1>Acesso da Supervisão</h1>
+    <p>Área administrativa protegida por autenticação.</p>
+    <form id="loginForm" onsubmit="event.preventDefault(); entrarSupervisao();">
+      <label for="loginEmail">E-mail</label>
+      <input id="loginEmail" type="email" autocomplete="username" placeholder="seu e-mail" required>
+      <label for="loginSenha">Senha</label>
+      <input id="loginSenha" type="password" autocomplete="current-password" placeholder="sua senha" required>
+      <button id="loginBtn" class="primary" type="submit">Entrar no Painel</button>
+      <div id="loginMsg" class="mini" style="min-height:18px;margin-top:12px"></div>
+    </form>
+    <p class="mini" style="margin-top:16px">Colaboradores acessam exclusivamente pelo QR Code do ambiente.</p>
+  </div>
+</div>
+<main id="appMain" style="display:none">
   <div class="tabs">
     <button class="tab active" onclick="show('inicio',this)">🏠 Início</button>
     <button class="tab" onclick="show('rotina',this)">🧹 Nova rotina</button>
@@ -188,10 +297,10 @@ th{color:#7b8490;font-size:11px;text-transform:uppercase;letter-spacing:.5px;bac
   </section>
 
   <section id="rotina" class="view">
-    <div class="hero"><div><h1>Rotina de Cuidado do Ambiente</h1><p>QR Code identificado: <b id="qrcode">BA-001</b></p></div><span class="tag" id="ambienteTag">Banheiro — Bloco A</span></div>
+    <div class="hero"><div><h1>Rotina de Cuidado do Ambiente</h1><p>QR Code identificado: <b id="qrcode">AGUARDANDO QR</b></p></div><span class="tag" id="ambienteTag">Ambiente não identificado</span></div>
     <div class="grid">
       <div class="card">
-        <div style="display:flex;justify-content:space-between;gap:15px"><div><h2 id="ambienteTitulo">Banheiro — Bloco A</h2><div class="mini">A rotina é vinculada automaticamente ao ambiente.</div></div><span class="tag">CHECKLIST</span></div>
+        <div style="display:flex;justify-content:space-between;gap:15px"><div><h2 id="ambienteTitulo">Aguardando identificação do ambiente</h2><div class="mini">A rotina é vinculada automaticamente ao ambiente.</div></div><span class="tag">CHECKLIST</span></div>
         <label>Colaborador</label><select id="colab"></select>
         <h3>Itens da rotina</h3><div class="checks" id="checks"></div>
       </div>
@@ -231,6 +340,11 @@ th{color:#7b8490;font-size:11px;text-transform:uppercase;letter-spacing:.5px;bac
       <div class="card"><h2>Atividades por ambiente</h2><div id="envKpi"></div></div>
     </div>
     <div class="card" style="margin-top:18px">
+      <h2>🔔 Central de Atenção</h2>
+      <p class="mini" style="margin-top:-10px;margin-bottom:16px">Ocorrências e rotinas marcadas como atenção/problema para acompanhamento da supervisão.</p>
+      <div id="atencoes"></div>
+    </div>
+    <div class="card" style="margin-top:18px">
       <h2>Histórico real</h2>
       <div class="filters">
         <div><label>Data</label><input type="date" id="fData" onchange="renderHistorico()"></div>
@@ -247,7 +361,13 @@ th{color:#7b8490;font-size:11px;text-transform:uppercase;letter-spacing:.5px;bac
 <script>
 const SUPABASE_URL='https://krsbboedhfczbjgkueqx.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_tSEpXf4Kw6igC7YQYelM5w_44OXYlxp';
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+let sb=null;
+function getSB(){
+  if(!sb && window.supabase?.createClient){
+    sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+  }
+  return sb;
+}
 
 const ambientes={
  'BA-001':{nome:'Banheiro — Bloco A',tipo:'Banheiro',itens:['Limpeza realizada','Papel higiênico','Papel toalha','Sabonete','Lixeiras','Torneiras','Descargas','Iluminação','Piso','Odor']},
@@ -256,35 +376,112 @@ const ambientes={
  'BL-001':{nome:'Biblioteca',tipo:'Biblioteca',itens:['Limpeza','Organização','Estantes','Piso','Iluminação','Climatização','Odor','Sinais de umidade']},
  'AE-001':{nome:'Área externa',tipo:'Área externa',itens:['Limpeza','Lixeiras','Piso','Drenagem','Iluminação','Vegetação','Objetos fora do lugar','Segurança']}
 };
-let atual='BA-001', cache={rotinas:[],ocorrencias:[],evidencias:[],ambientes:[],colaboradores:[]};
+let atual='', cache={rotinas:[],ocorrencias:[],evidencias:[],ambientes:[],colaboradores:[]};
 
 function setDBStatus(text,cls){const e=document.getElementById('dbStatus');e.textContent='● '+text;e.className=cls||''}
-async function testarBanco(){try{const {error}=await sb.from('ambientes').select('id').limit(1);if(error)throw error;setDBStatus('banco conectado','dbok');return true}catch(e){console.error(e);setDBStatus('banco aguardando políticas','dbwait');return false}}
+async function testarBanco(){
+  const client=getSB();
+  if(!client){setDBStatus('modo local • banco aguardando','dbwait');return false}
+  try{
+    const {error}=await client.from('ambientes').select('id').limit(1);
+    if(error)throw error;
+    setDBStatus('banco conectado','dbok');
+    return true;
+  }catch(e){
+    console.warn('Banco indisponível no momento:',e);
+    setDBStatus('banco aguardando políticas','dbwait');
+    return false;
+  }
+}
 
-function show(id,btn){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');if(id==='painel')carregarPainel();window.scrollTo({top:0,behavior:'smooth'})}
+function show(id,btn){
+  if(document.documentElement.classList.contains('qr-mode') && id!=='rotina') id='rotina';
+  if(id!=='rotina' && !supervisorAutenticado && !document.documentElement.classList.contains('qr-mode')){
+    document.getElementById('accessGate').style.display='block';
+    document.getElementById('appMain').style.display='none';
+    return;
+  }
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  const target=document.getElementById(id); if(target) target.classList.add('active');
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  if(btn && !document.documentElement.classList.contains('qr-mode')) btn.classList.add('active');
+  if(id==='painel' && supervisorAutenticado && !document.documentElement.classList.contains('qr-mode')) carregarPainel();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 function makeURL(cod){return window.location.href.split('?')[0]+'?ambiente='+encodeURIComponent(cod)}
-function abrirAmbiente(cod){if(!ambientes[cod])cod='BA-001';atual=cod;const a=ambientes[cod];document.getElementById('qrcode').textContent=cod;document.getElementById('ambienteTag').textContent=a.nome;document.getElementById('ambienteTitulo').textContent=a.nome;document.getElementById('checks').innerHTML=a.itens.map((x,i)=>`<label class="check"><input type="checkbox" data-item="${i}"> ${x}</label>`).join('');document.getElementById('cat').value='Nenhuma';document.getElementById('desc').value='';document.getElementById('foto').value='';document.getElementById('preview').style.display='none';document.querySelector('input[name=status][value="Normal"]').checked=true;show('rotina',document.querySelectorAll('.tab')[1])}
+function abrirAmbiente(cod){
+  cod=(cod||'').trim().toUpperCase().replace(/[.,;:!?]+$/,'');
+  ativarModoQRVisual();
+
+  const title=document.getElementById('ambienteTitulo');
+  const tag=document.getElementById('ambienteTag');
+  const qr=document.getElementById('qrcode');
+  const checks=document.getElementById('checks');
+
+  if(!cod || !ambientes[cod]){
+    atual=null;
+    if(qr) qr.textContent='QR INVÁLIDO';
+    if(tag) tag.textContent='Ambiente não identificado';
+    if(title) title.textContent='QR Code inválido ou não cadastrado';
+    if(checks) checks.innerHTML='<div class="empty">Este QR Code não corresponde a um ambiente cadastrado. Gere um novo QR Code.</div>';
+    const colab=document.getElementById('colab'); if(colab) colab.innerHTML='<option value="">QR inválido</option>';
+    return false;
+  }
+
+  atual=cod;
+  const a=ambientes[cod];
+  if(qr) qr.textContent=cod;
+  if(tag) tag.textContent=a.nome;
+  if(title) title.textContent=a.nome;
+  if(checks) checks.innerHTML=a.itens.map((x,i)=>`<label class="check"><input type="checkbox" data-item="${i}"> ${x}</label>`).join('');
+  const cat=document.getElementById('cat'); if(cat) cat.value='Nenhuma';
+  const desc=document.getElementById('desc'); if(desc) desc.value='';
+  const foto=document.getElementById('foto'); if(foto) foto.value='';
+  const preview=document.getElementById('preview'); if(preview) preview.style.display='none';
+  const normal=document.querySelector('input[name="status"][value="Normal"]'); if(normal) normal.checked=true;
+
+  document.querySelectorAll('.tabs, header .nav').forEach(el=>el.style.setProperty('display','none','important'));
+  show('rotina',null);
+  return true;
+}
 function imprimirQR(cod){const a=ambientes[cod],w=window.open('','_blank','width=500,height=650');w.document.write(`<html><head><title>QR ${cod}</title><style>body{font-family:Arial;text-align:center;padding:30px}.box{margin:25px auto;width:260px}</style><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script></head><body><h1>APOIO OPERACIONAL</h1><div class="box" id="q"></div><h2>${a.nome}</h2><p>Código: ${cod}</p><p>Escaneie para iniciar a rotina.</p></body></html>`);w.document.close();setTimeout(()=>{new w.QRCode(w.document.getElementById('q'),{text:makeURL(cod),width:260,height:260});setTimeout(()=>w.print(),300)},300)}
 
 async function carregarCadastros(){
- const [a,c]=await Promise.all([
-  sb.from('ambientes').select('id,codigo,nome,tipo'),
-  sb.from('colaboradores').select('id,nome,cargo')
- ]);
- if(a.error||c.error){console.error(a.error||c.error);return}
- cache.ambientes=a.data||[];cache.colaboradores=c.data||[];
- const sel=document.getElementById('colab');sel.innerHTML=cache.colaboradores.map(x=>`<option value="${x.id}" data-nome="${x.nome}">${x.nome}</option>`).join('');
- document.getElementById('fColab').innerHTML='<option value="">Todos</option>'+cache.colaboradores.map(x=>`<option value="${x.id}">${x.nome}</option>`).join('');
- document.getElementById('fAmb').innerHTML='<option value="">Todos</option>'+cache.ambientes.map(x=>`<option value="${x.id}">${x.nome}</option>`).join('');
+  if(!getSB()){ console.warn('Supabase indisponível; operação adiada.'); return false; }
+
+  try{
+    const [a,c]=await Promise.all([
+      getSB()?.from('ambientes').select('id,codigo,nome,tipo'),
+      getSB()?.from('colaboradores').select('id,nome,cargo')
+    ]);
+    if(a.error) throw a.error;
+    if(c.error) throw c.error;
+    cache.ambientes=a.data||[];
+    cache.colaboradores=c.data||[];
+    const sel=document.getElementById('colab');
+    if(sel) sel.innerHTML='<option value="">Selecione...</option>'+cache.colaboradores.map(x=>`<option value="${x.id}">${x.nome}</option>`).join('');
+    const fColab=document.getElementById('fColab');
+    if(fColab) fColab.innerHTML='<option value="">Todos</option>'+cache.colaboradores.map(x=>`<option value="${x.id}">${x.nome}</option>`).join('');
+    const fAmb=document.getElementById('fAmb');
+    if(fAmb) fAmb.innerHTML='<option value="">Todos</option>'+cache.ambientes.map(x=>`<option value="${x.id}">${x.nome}</option>`).join('');
+  }catch(e){ console.warn('Cadastros indisponíveis no momento:',e); }
 }
 async function carregarDados(){
- const [r,o,e]=await Promise.all([
-  sb.from('rotinas').select('id,ambiente_id,colaborador_id,status,itens_realizados,itens_total,observacao,realizado_em').order('realizado_em',{ascending:false}).limit(500),
-  sb.from('ocorrencias').select('id,ambiente_id,colaborador_id,categoria,descricao,prioridade,status').order('id',{ascending:false}).limit(500),
-  sb.from('evidencias').select('id,rotina_id,ocorrencia_id,arquivo_url,criado_em').order('criado_em',{ascending:false}).limit(500)
- ]);
- if(r.error)console.error(r.error);if(o.error)console.error(o.error);if(e.error)console.error(e.error);
- cache.rotinas=r.data||[];cache.ocorrencias=o.data||[];cache.evidencias=e.data||[];
+  if(!getSB()){ console.warn('Supabase indisponível; operação adiada.'); return false; }
+
+  try{
+    const [r,o,e]=await Promise.all([
+      getSB()?.from('rotinas').select('id,ambiente_id,colaborador_id,status,itens_realizados,itens_total,observacao,realizado_em').order('realizado_em',{ascending:false}).limit(500),
+      getSB()?.from('ocorrencias').select('id,ambiente_id,colaborador_id,categoria,descricao,prioridade,status').order('id',{ascending:false}).limit(500),
+      getSB()?.from('evidencias').select('id,rotina_id,ocorrencia_id,arquivo_url,criado_em').order('criado_em',{ascending:false}).limit(500)
+    ]);
+    if(r.error) console.warn(r.error);
+    if(o.error) console.warn(o.error);
+    if(e.error) console.warn(e.error);
+    cache.rotinas=r.data||[];
+    cache.ocorrencias=o.data||[];
+    cache.evidencias=e.data||[];
+  }catch(e){ console.warn('Dados indisponíveis no momento:',e); }
 }
 function nomeAmb(id){return cache.ambientes.find(x=>x.id===id)?.nome||'Ambiente'}
 function nomeCol(id){return cache.colaboradores.find(x=>x.id===id)?.nome||'Colaborador'}
@@ -295,24 +492,24 @@ function formatData(d){if(!d)return'';return new Date(d).toLocaleDateString('pt-
 async function finalizar(){
  const btn=document.getElementById('finalBtn');btn.disabled=true;
  try{
-  const a=ambientes[atual],checked=[...document.querySelectorAll('#checks input')].filter(x=>x.checked).length;
+  if(!atual || !ambientes[atual]){alert('QR Code inválido. Não é possível finalizar esta rotina.');return;} const a=ambientes[atual],checked=[...document.querySelectorAll('#checks input')].filter(x=>x.checked).length;
   const statusUI=document.querySelector('input[name=status]:checked').value,status=statusUI.toLowerCase();
   const cat=document.getElementById('cat').value,desc=document.getElementById('desc').value.trim();
-  const colabId=document.getElementById('colab').value,file=document.getElementById('foto').files[0];
-  const {data:amb,error:ambErr}=await sb.from('ambientes').select('id').eq('codigo',atual).single();if(ambErr)throw ambErr;
-  const {data:rot,error:rotErr}=await sb.from('rotinas').insert({ambiente_id:amb.id,colaborador_id:colabId,status,itens_realizados:checked,itens_total:a.itens.length,observacao:desc||null}).select('id,realizado_em').single();if(rotErr)throw rotErr;
+  const colabId=document.getElementById('colab').value,file=document.getElementById('foto').files[0]; if(!colabId){alert('Selecione o colaborador antes de finalizar.');return;}
+  const {data:amb,error:ambErr}=await getSB().from('ambientes').select('id').eq('codigo',atual).single();if(ambErr)throw ambErr;
+  const {data:rot,error:rotErr}=await getSB().from('rotinas').insert({ambiente_id:amb.id,colaborador_id:colabId,status,itens_realizados:checked,itens_total:a.itens.length,observacao:desc||null}).select('id,realizado_em').single();if(rotErr)throw rotErr;
   if(cat!=='Nenhuma'||status!=='normal'){
    const prioridade=status==='problema'?'alta':status==='atenção'?'media':'baixa';
-   const {error}=await sb.from('ocorrencias').insert({ambiente_id:amb.id,colaborador_id:colabId,categoria:cat==='Nenhuma'?'Observação':cat,descricao:desc||'Ocorrência registrada durante a rotina.',prioridade,status:'aberta'});if(error)console.error(error);
+   const {error}=await getSB().from('ocorrencias').insert({ambiente_id:amb.id,colaborador_id:colabId,categoria:cat==='Nenhuma'?'Observação':cat,descricao:desc||'Ocorrência registrada durante a rotina.',prioridade,status:'aberta'});if(error)console.error(error);
   }
   let fotoSalva=false;
   if(file){
    const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
    const nome=file.name.replace(/[^a-zA-Z0-9._-]/g,'_').slice(-80)||'evidencia';
    const path=`rotinas/${rot.id}/${Date.now()}-${nome}.${ext}`;
-   const {error:upErr}=await sb.storage.from('evidencias').upload(path,file,{contentType:file.type||'image/jpeg',upsert:false});if(upErr)throw upErr;
-   const {data:pub}=sb.storage.from('evidencias').getPublicUrl(path);
-   const {error:evErr}=await sb.from('evidencias').insert({rotina_id:rot.id,arquivo_url:pub.publicUrl});if(evErr)throw evErr;fotoSalva=true;
+   const {error:upErr}=await getSB()?.storage.from('evidencias').upload(path,file,{contentType:file.type||'image/jpeg',upsert:false});if(upErr)throw upErr;
+   const {data:pub}=getSB()?.storage.from('evidencias').getPublicUrl(path);
+   const {error:evErr}=await getSB().from('evidencias').insert({rotina_id:rot.id,arquivo_url:pub.publicUrl});if(evErr)throw evErr;fotoSalva=true;
   }
   toast(`✓ Salvo no banco • ${checked}/${a.itens.length} itens • ${statusUI}${fotoSalva?' • 📸 foto salva':''}`);
   await carregarDados();renderHistorico();renderRecent();
@@ -339,7 +536,31 @@ function renderHistorico(){
  }).join('');
  document.getElementById('historico').innerHTML=html||'<tr><td colspan="7" class="empty">Nenhum registro encontrado.</td></tr>';
 }
-function carregarPainel(){
+function renderAtencoes(){
+ const el=document.getElementById('atencoes');
+ const problematic=cache.rotinas.filter(r=>['atenção','problema'].includes((r.status||'').toLowerCase()));
+ const openOcc=cache.ocorrencias.filter(o=>(o.status||'').toLowerCase()!=='resolvida');
+ const cards=[];
+ problematic.slice(0,6).forEach(r=>{
+   const ev=cache.evidencias.find(e=>String(e.rotina_id)===String(r.id));
+   cards.push(`<div class="attention ${r.status.toLowerCase()==='problema'?'problem':'warning'}">
+    <div class="attention-top"><div class="attention-title">${r.status.toLowerCase()==='problema'?'🔴':'🟡'} ${r.status}</div>${ev?.arquivo_url?`<a class="photo-link" href="${ev.arquivo_url}" target="_blank">📷 Foto</a>`:''}</div>
+    <div class="attention-desc">${nomeAmb(r.ambiente_id)}<br>${r.observacao||'Sem descrição adicional.'}</div>
+    <div class="attention-meta">${nomeCol(r.colaborador_id)} • ${formatData(r.realizado_em)} ${formatHora(r.realizado_em)} • ${r.itens_realizados}/${r.itens_total} itens</div>
+   </div>`)
+ });
+ openOcc.slice(0,6).forEach(o=>{
+   if(problematic.some(r=>String(r.ambiente_id)===String(o.ambiente_id)&&String(r.colaborador_id)===String(o.colaborador_id))) return;
+   cards.push(`<div class="attention ${o.prioridade==='alta'?'problem':'warning'}">
+    <div class="attention-top"><div class="attention-title">${o.prioridade==='alta'?'🔴':'🟡'} ${o.categoria||'Ocorrência'}</div><span class="badge ${o.prioridade==='alta'?'prob':'att'}">${o.status||'aberta'}</span></div>
+    <div class="attention-desc">${nomeAmb(o.ambiente_id)}<br>${o.descricao||'Sem descrição.'}</div>
+    <div class="attention-meta">${nomeCol(o.colaborador_id)} • prioridade ${o.prioridade||'—'}</div>
+   </div>`)
+ });
+ el.innerHTML=cards.length?`<div class="attention-grid">${cards.join('')}</div>`:'<div class="empty">🟢 Nenhuma atenção pendente.</div>';
+}
+
+async function carregarPainel(){
  const hoje=new Date();const ini=new Date(hoje.getFullYear(),hoje.getMonth(),hoje.getDate());
  const hojeRot=cache.rotinas.filter(r=>r.realizado_em&&new Date(r.realizado_em)>=ini);
  const exec=hojeRot.length?Math.round(hojeRot.reduce((s,r)=>s+(Number(r.itens_total)?Number(r.itens_realizados)/Number(r.itens_total)*100:0),0)/hojeRot.length):0;
@@ -350,14 +571,154 @@ function carregarPainel(){
  document.getElementById('colabKpi').innerHTML=ccounts.length?ccounts.map(x=>`<div class="kpi"><span>${x[0]}</span><b>${x[1]}</b></div>`).join(''):'<div class="empty">Nenhuma rotina hoje.</div>';
  const ecounts=cache.ambientes.map(a=>[a.nome,hojeRot.filter(r=>r.ambiente_id===a.id).length]).filter(x=>x[1]>0);
  document.getElementById('envKpi').innerHTML=ecounts.length?ecounts.map(x=>`<div class="kpi"><span>${x[0]}</span><b>${x[1]}</b></div>`).join(''):'<div class="empty">Nenhuma rotina hoje.</div>';
- renderHistorico();
+ renderAtencoes();renderHistorico();
 }
 document.getElementById('foto').addEventListener('change',e=>{const f=e.target.files[0],p=document.getElementById('preview');if(f){p.src=URL.createObjectURL(f);p.style.display='block'}else p.style.display='none'});
 
-async function iniciar(){
- await testarBanco();await carregarCadastros();await carregarDados();renderRecent();renderAmbientes();
- const cod=new URLSearchParams(location.search).get('ambiente');abrirAmbiente(cod&&ambientes[cod]?cod:'BA-001');show(cod?'rotina':'inicio');
+
+let supervisorAutenticado=false;
+function obterCodigoQR(){
+  const raw=new URLSearchParams(location.search).get('ambiente');
+  if(!raw) return '';
+  return raw.trim().toUpperCase().replace(/[.,;:!?]+$/,'');
 }
+function isQRMode(){
+  return !!obterCodigoQR();
+}
+function ativarModoQRVisual(){
+  if(!obterCodigoQR()) return;
+  document.documentElement.classList.add('qr-mode');
+  document.documentElement.classList.remove('supervisor-mode');
+  const gate=document.getElementById('accessGate');
+  const main=document.getElementById('appMain');
+  if(gate) gate.style.setProperty('display','none','important');
+  if(main) main.style.setProperty('display','block','important');
+  document.querySelectorAll('.tabs, header .nav').forEach(el=>el.style.setProperty('display','none','important'));
+}
+
+
+async function entrarSupervisao(){
+  const email=document.getElementById('loginEmail')?.value.trim();
+  const senha=document.getElementById('loginSenha')?.value;
+  const btn=document.getElementById('loginBtn');
+  const msg=document.getElementById('loginMsg');
+  if(!email||!senha)return;
+  btn.disabled=true; msg.className='mini'; msg.textContent='Autenticando...';
+  const client=getSB();
+  if(!client){msg.className='mini error';msg.textContent='Banco de autenticação indisponível.';btn.disabled=false;return}
+  try{
+    const {data,error}=await client.auth.signInWithPassword({email,password:senha});
+    if(error)throw error;
+    supervisorAutenticado=!!data.session;
+    configurarAcesso();
+    msg.className='mini ok'; msg.textContent='Acesso autorizado.';
+    show('inicio');
+    await carregarCadastros();
+    await carregarDados();
+    renderRecent(); renderAmbientes();
+  }catch(e){
+    console.error(e);
+    supervisorAutenticado=false;
+    msg.className='mini error';
+    msg.textContent='E-mail ou senha inválidos.';
+  }finally{btn.disabled=false}
+}
+
+async function sairSupervisao(){
+  const client=getSB();
+  if(client) await client.auth.signOut();
+  supervisorAutenticado=false;
+  location.href=location.pathname;
+}
+
+async function configurarAcesso(){
+  const qr=isQRMode();
+  const gate=document.getElementById('accessGate'), main=document.getElementById('appMain');
+  if(qr){
+    document.documentElement.classList.add('qr-mode');
+    document.documentElement.classList.remove('supervisor-mode');
+    gate.style.display='none'; main.style.display='block';
+    const tabs=main.querySelector('.tabs'); if(tabs) tabs.style.display='none';
+    const nav=document.querySelector('header .nav'); if(nav) nav.style.display='none';
+    main.querySelectorAll('.view').forEach(v=>v.style.display='none');
+    const rotina=document.getElementById('rotina'); if(rotina) rotina.style.display='block';
+    return false;
+  }
+
+  const client=getSB();
+  if(!client){
+    supervisorAutenticado=false;
+    gate.style.display='flex'; main.style.display='none';
+    document.querySelectorAll('.tabs,.nav').forEach(el=>el.style.display='none');
+    return false;
+  }
+  try{
+    const {data,error}=await client.auth.getSession();
+    if(error)throw error;
+    supervisorAutenticado=!!data.session;
+  }catch(e){
+    console.warn('Sessão de supervisão indisponível:',e);
+    supervisorAutenticado=false;
+  }
+
+  if(supervisorAutenticado){
+    document.documentElement.classList.add('supervisor-mode');
+    document.documentElement.classList.remove('qr-mode');
+    gate.style.display='none'; main.style.display='block';
+    const tabs=main.querySelector('.tabs'); if(tabs) tabs.style.display='flex';
+    const nav=document.querySelector('header .nav'); if(nav) nav.style.display='flex';
+    main.querySelectorAll('.view').forEach(v=>v.style.display='');
+    return true;
+  }
+
+  document.documentElement.classList.remove('qr-mode','supervisor-mode');
+  gate.style.display='flex'; main.style.display='none';
+  document.querySelectorAll('.tabs,.nav').forEach(el=>el.style.display='none');
+  return false;
+}
+
+async function iniciar(){
+  const cod=obterCodigoQR();
+
+  // QR: acesso público somente à rotina, sem depender de autenticação.
+  if(cod){
+    ativarModoQRVisual();
+    await configurarAcesso();
+    if(!abrirAmbiente(cod)) return;
+    await testarBanco();
+    if(document.documentElement.classList.contains('qr-mode')){
+      await carregarCadastros();
+      const colab=document.getElementById('colab');
+      if(colab && cache.colaboradores.length){
+        colab.innerHTML='<option value="">Selecione...</option>'+cache.colaboradores.map(x=>`<option value="${x.id}">${x.nome}</option>`).join('');
+      }
+    }
+    return;
+  }
+
+  // Supervisão: autenticação real antes de abrir o painel.
+  const ok=await configurarAcesso();
+  if(!ok) return;
+
+  await testarBanco();
+  await carregarCadastros();
+  await carregarDados();
+  renderRecent();
+  renderAmbientes();
+  show('inicio');
+
+  const client=getSB();
+  if(client) client.auth.onAuthStateChange((event,session)=>{
+    supervisorAutenticado=!!session;
+    if(!session){
+      document.documentElement.classList.remove('supervisor-mode');
+      document.getElementById('accessGate').style.display='flex';
+      document.getElementById('appMain').style.display='none';
+      document.querySelectorAll('.tabs,.nav').forEach(el=>el.style.display='none');
+    }
+  });
+}
+ativarModoQRVisual();
 iniciar();
 </script>
 </body>
