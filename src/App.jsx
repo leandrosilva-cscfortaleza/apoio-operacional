@@ -232,7 +232,7 @@ await supabase.auth.setPersistence?.(
       })
 
     if (error) {
-      setMensagem('E-mail ou senha inválidos.')
+      setMensagem(error.message || 'E-mail ou senha inválidos.')
       setTipoMensagem('erro')
       setEntrando(false)
       return
