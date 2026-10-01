@@ -5,7 +5,7 @@ import { supabase } from './supabase'
 function QrScanner({ onVoltar, onAmbienteEncontrado }) {
   const scannerRef = useRef(null)
   const iniciandoRef = useRef(false)
-
+const lidoRef = useRef(false)
   const [iniciando, setIniciando] = useState(true)
   const [erro, setErro] = useState('')
   const [lido, setLido] = useState(false)
@@ -41,7 +41,10 @@ function QrScanner({ onVoltar, onAmbienteEncontrado }) {
           aspectRatio: 1,
         },
         async (codigo) => {
-          if (lido) return
+          if (lidoRef.current) return
+
+lidoRef.current = true
+setLido(true)
 
           setLido(true)
 
@@ -182,6 +185,7 @@ function QrScanner({ onVoltar, onAmbienteEncontrado }) {
 
     scannerRef.current = null
     iniciandoRef.current = false
+    lidoRef.current = false
   }
 
   async function voltar() {
