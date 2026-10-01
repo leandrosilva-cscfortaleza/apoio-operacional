@@ -2885,8 +2885,8 @@ input {
 
 .environment-card {
   padding: 28px;
-  border-radius: 20px;
-  background: var(--ao-surface);
+ background: var(--ao-card-dark);
+border: 1px solid var(--ao-border);
   border: 1px solid var(--ao-border);
   display: flex;
 
