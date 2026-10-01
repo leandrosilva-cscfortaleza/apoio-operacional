@@ -1073,7 +1073,19 @@ if (tela === 'detalhe' && rotinaAtual) {
 
         <div className="environment-page checklist-direct">
 
-          <header className="environment-header">
+          <header
+  style={{
+    width: '100%',
+    maxWidth: '900px',
+    margin: '0 auto',
+    padding: '18px 14px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: '10px',
+    boxSizing: 'border-box',
+  }}
+>
 
             <button
               className="back-button"
@@ -1087,9 +1099,19 @@ if (tela === 'detalhe' && rotinaAtual) {
                 AMBIENTE IDENTIFICADO
               </span>
 
-              <h1>
-                {ambienteSelecionado.nome}
-              </h1>
+              <h1
+  style={{
+    margin: '5px 0 4px',
+    color: 'var(--ao-text)',
+    fontSize: 'clamp(22px, 6vw, 28px)',
+    lineHeight: 1.15,
+    fontWeight: 800,
+    wordBreak: 'break-word',
+    overflowWrap: 'anywhere',
+  }}
+>
+  {ambienteSelecionado?.nome}
+</h1>
             </div>
 
           </header>
@@ -1457,8 +1479,19 @@ setTela('rotina')
 
             <div className="environment-page">
 
-              <header className="environment-header">
-                <button
+<header
+  style={{
+    width: '100%',
+    maxWidth: '900px',
+    margin: '0 auto',
+    padding: '18px 14px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: '10px',
+    boxSizing: 'border-box',
+  }}
+>                <button
                   className="back-button"
                   onClick={() => {
   setRotinaAtual(null)
@@ -1472,7 +1505,14 @@ setTela('rotina')
                   ← Voltar
                 </button>
 
-                <div>
+                <div
+  style={{
+    width: '100%',
+    minWidth: 0,
+    overflow: 'hidden',
+    boxSizing: 'border-box',
+  }}
+>
                   <span className="eyebrow">
                     ROTINA EM EXECUÇÃO
                   </span>
@@ -1481,9 +1521,17 @@ setTela('rotina')
                     {ambienteSelecionado?.nome}
                   </h1>
 
-                  <p style={{ color: '#8da0bd' }}>
-                    {checklistSelecionado?.nome}
-                  </p>
+                  <p
+  style={{
+    margin: 0,
+    color: '#8da0bd',
+    fontSize: '13px',
+    lineHeight: 1.35,
+    wordBreak: 'break-word',
+  }}
+>
+  {checklistSelecionado?.nome}
+</p>
                 </div>
               </header>
 
