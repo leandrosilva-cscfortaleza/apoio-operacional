@@ -389,7 +389,7 @@ await supabase.auth.setPersistence?.(
     setChecklistsAmbiente(lista)
   }
 
-  setTela('ambiente')
+  setTela('checklist')
 }
 
   function formatarData(data) {
@@ -973,7 +973,7 @@ if (tela === 'detalhe' && rotinaAtual) {
    * AMBIENTE ENCONTRADO
    */
 
-  if (tela === 'ambiente' && ambienteSelecionado) {
+  if (tela === 'checklist' && ambienteSelecionado) {
     return (
       <>
         <style>{estilosCSS}</style>
