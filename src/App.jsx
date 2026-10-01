@@ -3050,10 +3050,61 @@ border: 1px solid var(--ao-border);
   }
 
   .environment-header {
-    align-items: flex-start;
-    flex-direction: column;
-  }
+  width: 100%;
+  max-width: 100%;
+  padding: 16px 14px !important;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 10px !important;
+  box-sizing: border-box;
+}
+/* =========================
+   CABEÇALHO DA ROTINA
+========================= */
 
+.routine-header {
+  width: 100%;
+  max-width: 100%;
+  padding: 16px 14px !important;
+  box-sizing: border-box;
+  gap: 10px !important;
+}
+
+.routine-header .back-button {
+  width: auto;
+  min-width: 82px;
+  padding: 9px 13px;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.routine-header-info {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.routine-header-info .eyebrow {
+  display: block;
+  font-size: 9px;
+  line-height: 1.2;
+}
+
+.routine-header-info h1 {
+  margin: 5px 0 3px !important;
+  font-size: 24px !important;
+  line-height: 1.15 !important;
+  font-weight: 800;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.routine-header-info p {
+  margin: 0 !important;
+  font-size: 13px !important;
+  line-height: 1.35 !important;
+  word-break: break-word;
+}
   .next-card {
     flex-direction: column;
     align-items: flex-start;
@@ -3093,7 +3144,23 @@ border: 1px solid var(--ao-border);
 }
 
 @media (max-width: 520px) {
+.routine-header {
+  padding: 14px 12px !important;
+}
 
+.routine-header .back-button {
+  min-width: 78px;
+  padding: 8px 11px;
+  font-size: 11px;
+}
+
+.routine-header-info h1 {
+  font-size: 21px !important;
+}
+
+.routine-header-info p {
+  font-size: 12px !important;
+}
   .login-card {
     padding: 28px 22px;
   }
