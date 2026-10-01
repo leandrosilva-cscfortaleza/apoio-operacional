@@ -2681,8 +2681,11 @@ input {
 }
 
 .environment-card canvas {
-  max-width: 100%;
+  width: min(100%, 280px) !important;
+  max-width: 280px !important;
   height: auto !important;
+  display: block;
+  margin: 0 auto;
 }
 .back-button {
   padding: 11px 16px;
