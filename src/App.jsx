@@ -2669,7 +2669,21 @@ input {
   align-items: center;
   gap: 22px;
 }
+.environment-card {
+  flex-direction: column;
+  align-items: stretch;
+  padding: 20px;
+}
 
+.environment-card > div:first-child {
+  width: 100%;
+  margin-top: 0 !important;
+}
+
+.environment-card canvas {
+  max-width: 100%;
+  height: auto !important;
+}
 .back-button {
   padding: 11px 16px;
 }
