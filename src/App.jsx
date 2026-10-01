@@ -387,11 +387,95 @@ await supabase.auth.setPersistence?.(
       .filter((checklist) => checklist && checklist.ativo)
 
     setChecklistsAmbiente(lista)
+    if (lista.length === 1) {
+  await iniciarRotinaDireta(ambiente, lista[0])
+  return
+}
   }
 
   setTela('checklist')
 }
+async function iniciarRotinaDireta(ambiente, checklist) {
+  if (!ambiente || !checklist) return
 
+  const { data, error } = await supabase.rpc(
+    'iniciar_rotina',
+    {
+      p_ambiente_id: ambiente.id,
+      p_checklist_id: checklist.id,
+    }
+  )
+
+  let rotinaId = data
+
+  if (error) {
+    console.error('ERRO AO INICIAR ROTINA:', error)
+
+    if (error.message?.includes('Já existe uma rotina em execução')) {
+      const { data: rotinaExistente, error: erroBusca } = await supabase
+        .from('rotinas')
+        .select('id')
+        .eq('usuario_id', usuario.id)
+        .eq('ambiente_id', ambiente.id)
+        .eq('checklist_id', checklist.id)
+        .eq('status', 'EM_EXECUCAO')
+        .order('iniciada_em', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+
+      if (erroBusca || !rotinaExistente) {
+        alert('Não foi possível localizar a rotina que já está em execução.')
+        return
+      }
+
+      rotinaId = rotinaExistente.id
+    } else {
+      alert(`Não foi possível iniciar a rotina: ${error.message}`)
+      return
+    }
+  }
+
+  const { data: itens, error: erroItens } = await supabase
+    .from('rotina_itens')
+    .select(`
+      id,
+      resposta,
+      observacao,
+      respondido_em,
+      checklist_item_id,
+      checklist_itens (
+        ordem,
+        obrigatorio,
+        configuracao,
+        itens (
+          id,
+          nome,
+          descricao,
+          tipo_resposta
+        )
+      )
+    `)
+    .eq('rotina_id', rotinaId)
+    .order('ordem', {
+      foreignTable: 'checklist_itens',
+      ascending: true,
+    })
+
+  if (erroItens) {
+    console.error('Erro ao carregar itens da rotina:', erroItens)
+    alert(
+      `A rotina foi criada, mas não foi possível carregar os itens: ${erroItens.message}`
+    )
+    return
+  }
+
+  setAmbienteSelecionado(ambiente)
+  setChecklistSelecionado(checklist)
+  setObservacaoRotina('')
+  setItensRotina(itens || [])
+  setRotinaAtual(rotinaId)
+  setTela('rotina')
+}
   function formatarData(data) {
     if (!data) return '-'
 
