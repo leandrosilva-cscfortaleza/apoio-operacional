@@ -1516,23 +1516,25 @@ setTela('rotina')
               >
 
                 {itensRotina.map((item, index) => (
-                  <div
-                    key={item.id}
-                    style={{
-                      background: '#111a28',
-                      border: '1px solid #253247',
-                      borderRadius: '18px',
-                      padding: '20px',
-                    }}
-                  >
+                 <div
+  key={item.id}
+  className="routine-item-card"
+  style={{
+    background: '#111a28',
+    border: '1px solid #253247',
+    borderRadius: '18px',
+    padding: '20px',
+  }}
+>
 
                     <div
-                      style={{
-                        display: 'flex',
-                        gap: '14px',
-                        alignItems: 'flex-start',
-                      }}
-                    >
+  className="routine-item-header"
+  style={{
+    display: 'flex',
+    gap: '14px',
+    alignItems: 'flex-start',
+  }}
+>
 
                       <div
                         style={{
@@ -1550,7 +1552,13 @@ setTela('rotina')
                         {index + 1}
                       </div>
 
-                      <div style={{ flex: 1 }}>
+                      <div
+  className="routine-item-content"
+  style={{
+    flex: 1,
+    minWidth: 0,
+  }}
+>
                         <h3
                           style={{
                             margin: 0,
@@ -1572,13 +1580,15 @@ setTela('rotina')
                           </p>
                         )}
 
-                        <div
-                          style={{
-                            display: 'flex',
-                            gap: '10px',
-                            marginTop: '16px',
-                          }}
-                        >
+  <div
+  style={{
+    display: 'flex',
+    gap: '6px',
+    marginTop: '16px',
+    width: '100%',
+    alignItems: 'stretch',
+  }}
+>
 
                           <button
                             type="button"
@@ -1597,18 +1607,23 @@ setTela('rotina')
                               )
                             }}
                             style={{
-                              flex: 1,
-                              padding: '12px',
-                              border: 0,
-                              borderRadius: '10px',
-                              background:
-                                item.resposta === 'CONFORME'
-                                  ? '#166534'
-                                  : '#243244',
-                              color: '#ffffff',
-                              fontWeight: 800,
-                              cursor: 'pointer',
-                            }}
+  flex: '1 1 0',
+  minWidth: 0,
+  padding: '10px 4px',
+  border: 0,
+  borderRadius: '10px',
+  background:
+    item.resposta === 'CONFORME'
+      ? '#166534'
+      : '#243244',
+  color: '#ffffff',
+  fontWeight: 800,
+  fontSize: 'clamp(9px, 2.7vw, 13px)',
+  lineHeight: 1.1,
+  whiteSpace: 'nowrap',
+  textAlign: 'center',
+  cursor: 'pointer',
+}}
                           >
                             ✓ CONFORME
                           </button>
@@ -1659,18 +1674,23 @@ setTela('rotina')
                               )
                             }}
                             style={{
-                              flex: 1,
-                              padding: '12px',
-                              border: 0,
-                              borderRadius: '10px',
-                              background:
-                                item.resposta === 'NAO_CONFORME'
-                                  ? '#991b1b'
-                                  : '#243244',
-                              color: '#ffffff',
-                              fontWeight: 800,
-                              cursor: 'pointer',
-                            }}
+  flex: '1 1 0',
+  minWidth: 0,
+  padding: '10px 4px',
+  border: 0,
+  borderRadius: '10px',
+  background:
+    item.resposta === 'NAO_CONFORME'
+      ? '#991b1b'
+      : '#243244',
+  color: '#ffffff',
+  fontWeight: 800,
+  fontSize: 'clamp(9px, 2.7vw, 13px)',
+  lineHeight: 1.1,
+  whiteSpace: 'nowrap',
+  textAlign: 'center',
+  cursor: 'pointer',
+}}
                           >
                             ✕ NÃO CONFORME
                           </button>
@@ -2905,17 +2925,17 @@ border: 1px solid var(--ao-border);
 
 .environment-info h2 {
   margin: 7px 0;
-  color: #ffffff;
+ color: var(--ao-text);
   font-size: 25px;
 }
 
 .environment-code {
-  color: #94a3b8;
+  color: var(--ao-text-soft);
   font-size: 13px;
 }
 
 .environment-info p {
-  color: #64748b;
+  color: var(--ao-text-muted);
   font-size: 13px;
   line-height: 1.5;
 }
@@ -2956,8 +2976,27 @@ border: 1px solid var(--ao-border);
 @media (max-width: 800px) {
 
   .topbar {
-    padding: 14px 18px;
-  }
+  width: 100%;
+  min-width: 0;
+  padding: 12px 14px;
+  gap: 10px;
+  overflow: hidden;
+  .environment-page .next-card + section button {
+  width: 100% !important;
+  min-width: 0 !important;
+  flex: 1 1 100% !important;
+  white-space: normal;
+  min-height: 54px;
+}
+
+.environment-page .next-card + section > div {
+  min-width: 0;
+}
+
+.environment-page .next-card + section > div > div {
+  min-width: 0;
+}
+}
 
   .brand-subtitle {
     display: none;
@@ -2972,14 +3011,19 @@ border: 1px solid var(--ao-border);
   }
 
   .main {
-    padding: 30px 17px;
-  }
+  width: 100%;
+  max-width: 100%;
+  padding: 30px 17px;
+  overflow-x: hidden;
+}
 
   .welcome {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 15px;
-  }
+  width: 100%;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
 
   .welcome h1 {
     font-size: 32px;
@@ -3000,7 +3044,7 @@ border: 1px solid var(--ao-border);
   }
 
   .activity-status {
-    width: 100%;
+    width: calc(100% - 56px);
     margin-left: 56px;
     align-items: flex-start;
   }
@@ -3013,6 +3057,38 @@ border: 1px solid var(--ao-border);
   .next-card {
     flex-direction: column;
     align-items: flex-start;
+    
+      /* =========================
+     ROTINA - MOBILE
+  ========================= */
+
+  .routine-item-card {
+    width: 100%;
+    padding: 16px !important;
+    border-radius: 15px !important;
+  }
+
+  .routine-item-header {
+    width: 100%;
+    gap: 10px !important;
+  }
+
+  .routine-item-content {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .routine-item-content h3 {
+    font-size: 16px !important;
+    line-height: 1.35;
+    word-break: break-word;
+  }
+
+  .routine-item-content p {
+    font-size: 13px !important;
+    line-height: 1.45;
+    word-break: break-word;
+  }
   }
 }
 
@@ -3021,7 +3097,22 @@ border: 1px solid var(--ao-border);
   .login-card {
     padding: 28px 22px;
   }
+  .routine-item-card {
+    padding: 14px !important;
+    border-radius: 14px !important;
+  }
 
+  .routine-item-header {
+    gap: 9px !important;
+  }
+
+  .routine-item-content h3 {
+    font-size: 15px !important;
+  }
+
+  .routine-item-content p {
+    font-size: 12px !important;
+  }
   .brand-title {
     font-size: 14px;
   }
