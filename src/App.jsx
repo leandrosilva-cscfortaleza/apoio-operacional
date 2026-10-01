@@ -978,7 +978,7 @@ if (tela === 'detalhe' && rotinaAtual) {
       <>
         <style>{estilosCSS}</style>
 
-        <div className="environment-page">
+        <div className="environment-page checklist-direct">
 
           <header className="environment-header">
 
@@ -2686,6 +2686,15 @@ input {
   height: auto !important;
   display: block;
   margin: 0 auto;
+}
+  .checklist-direct .environment-header,
+.checklist-direct .environment-card,
+.checklist-direct .next-card > div:first-child {
+  display: none;
+}
+
+.checklist-direct .next-card {
+  margin-top: 0;
 }
 .back-button {
   padding: 11px 16px;
