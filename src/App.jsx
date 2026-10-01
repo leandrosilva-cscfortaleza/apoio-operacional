@@ -7,6 +7,7 @@ function App() {
   const [sessao, setSessao] = useState(null)
   const [usuario, setUsuario] = useState(null)
   const [atividades, setAtividades] = useState([])
+  const [totalAtividades, setTotalAtividades] = useState(0)
   const [itensRotina, setItensRotina] = useState([])
   const [observacaoRotina, setObservacaoRotina] = useState('')
   const [tela, setTela] = useState('home')
@@ -185,7 +186,7 @@ setDetalheItens(itens || [])
   }
 
   async function carregarAtividades(usuarioId) {
-    const { data, error } = await supabase
+    const { data, error, count } = await supabase
       .from('rotinas')
       .select(`
         id,
@@ -202,7 +203,7 @@ setDetalheItens(itens || [])
         checklists (
           nome
         )
-      `)
+            `, { count: 'exact' })
       .eq('usuario_id', usuarioId)
       .order('iniciada_em', { ascending: false })
       .limit(8)
@@ -213,6 +214,7 @@ setDetalheItens(itens || [])
     }
 
     setAtividades(data || [])
+setTotalAtividades(count || 0)
   }
 
   async function entrar(event) {
@@ -1620,6 +1622,7 @@ setTela('rotina')
     )
   }}
   style={{
+    flex: 1,
     background:
   item.resposta === 'NAO_SE_APLICA'
     ? '#7a1f2b'
@@ -1889,7 +1892,7 @@ setTela('rotina')
               </span>
 
               <strong className="activity-number">
-                {atividades.length}
+                {totalAtividades}
               </strong>
 
               <span className="card-description">
