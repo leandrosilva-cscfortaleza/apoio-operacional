@@ -866,7 +866,7 @@ if (tela === 'detalhe' && rotinaAtual) {
     <div
      style={{
   display: 'grid',
-  gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(min(220px, 100%), 1fr))',
   gap: '14px',
   width: '100%',
   alignItems: 'stretch',
