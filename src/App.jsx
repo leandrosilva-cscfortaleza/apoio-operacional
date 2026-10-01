@@ -1142,9 +1142,18 @@ if (tela === 'detalhe' && rotinaAtual) {
                     'AMBIENTE'}
                 </span>
 
-                <h2>
-                  {ambienteSelecionado.nome}
-                </h2>
+                <h2
+  style={{
+    margin: '6px 0 6px',
+    fontSize: 'clamp(18px, 5vw, 24px)',
+    lineHeight: 1.2,
+    fontWeight: 800,
+    wordBreak: 'break-word',
+    overflowWrap: 'anywhere',
+  }}
+>
+  {checklistSelecionado?.nome}
+</h2>
 
                 <div className="environment-code">
                   Código: {ambienteSelecionado.codigo}
@@ -1517,9 +1526,20 @@ setTela('rotina')
                     ROTINA EM EXECUÇÃO
                   </span>
 
-                  <h1>
-                    {ambienteSelecionado?.nome}
-                  </h1>
+                  <h1
+  style={{
+    margin: '6px 0 0',
+    fontSize: 'clamp(20px, 6vw, 32px)',
+    lineHeight: 1.15,
+    fontWeight: 800,
+    color: '#ffffff',
+    wordBreak: 'break-word',
+    overflowWrap: 'anywhere',
+    maxWidth: '100%',
+  }}
+>
+  {ambienteSelecionado?.nome}
+</h1>
 
                   <p
   style={{
@@ -1536,43 +1556,76 @@ setTela('rotina')
               </header>
 
               <section
-                className="next-card"
-                style={{ marginTop: '24px' }}
-              >
-                <div>
+  className="next-card checklist-card"
+  style={{
+    marginTop: '20px',
+    width: '100%',
+    maxWidth: '900px',
+    boxSizing: 'border-box',
+    overflow: 'hidden',
+  }}
+>
+                <div
+  style={{
+    width: '100%',
+    minWidth: 0,
+    boxSizing: 'border-box',
+  }}
+>
                   <span className="card-label">
                     CHECKLIST
                   </span>
 
-                  <h2>
-                    {checklistSelecionado?.nome}
-                  </h2>
+                  <h2
+  style={{
+    margin: '6px 0 6px',
+    fontSize: 'clamp(18px, 5vw, 24px)',
+    lineHeight: 1.2,
+    fontWeight: 800,
+    wordBreak: 'break-word',
+    overflowWrap: 'anywhere',
+  }}
+>
+  {checklistSelecionado?.nome}
+</h2>
 
-                  <p>
-                    Responda aos itens abaixo para registrar a atividade.
-                  </p>
+                  <p
+  style={{
+    margin: 0,
+    fontSize: '13px',
+    lineHeight: 1.4,
+    wordBreak: 'break-word',
+  }}
+>
+  Responda aos itens abaixo para registrar a atividade.
+</p>
                 </div>
               </section>
 
               <section
-                style={{
-                  marginTop: '20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '14px',
-                }}
-              >
-
+  className="routine-items-list"
+  style={{
+    marginTop: '18px',
+    width: '100%',
+    maxWidth: '900px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px',
+    boxSizing: 'border-box',
+  }}
+>
                 {itensRotina.map((item, index) => (
                  <div
   key={item.id}
   className="routine-item-card"
-  style={{
-    background: '#111a28',
-    border: '1px solid #253247',
-    borderRadius: '18px',
-    padding: '20px',
-  }}
+ style={{
+  width: '100%',
+  boxSizing: 'border-box',
+  background: '#111a28',
+  border: '1px solid #253247',
+  borderRadius: '18px',
+  padding: '20px',
+}}
 >
 
                     <div
@@ -1585,16 +1638,20 @@ setTela('rotina')
 >
 
                       <div
-                        style={{
-                          minWidth: '36px',
-                          height: '36px',
-                          borderRadius: '50%',
-                          background: '#7a1f2b',
-                          color: '#ffffff',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontWeight: 800,
+                         style={{
+    flex: '0 0 36px',
+    width: '36px',
+    minWidth: '36px',
+    height: '36px',
+    borderRadius: '50%',
+    background: '#7a1f2b',
+    color: '#ffffff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontWeight: 800,
+    fontSize: '14px',
+    boxSizing: 'border-box',
                         }}
                       >
                         {index + 1}
@@ -1603,15 +1660,20 @@ setTela('rotina')
                       <div
   className="routine-item-content"
   style={{
-    flex: 1,
+   flex: 1,
     minWidth: 0,
+    width: '100%',
   }}
 >
                         <h3
-                          style={{
-                            margin: 0,
-                            color: '#ffffff',
-                            fontSize: '18px',
+  style={{
+    margin: 0,
+    color: '#ffffff',
+    fontSize: 'clamp(15px, 4.2vw, 18px)',
+    lineHeight: 1.3,
+    fontWeight: 800,
+    wordBreak: 'break-word',
+    overflowWrap: 'anywhere',
                           }}
                         >
                           {item.checklist_itens?.itens?.nome}
@@ -1619,9 +1681,13 @@ setTela('rotina')
 
                         {item.checklist_itens?.itens?.descricao && (
                           <p
-                            style={{
-                              color: '#8da0bd',
-                              marginTop: '7px',
+                              style={{
+    color: '#8da0bd',
+    margin: '7px 0 0',
+    fontSize: '13px',
+    lineHeight: 1.45,
+    wordBreak: 'break-word',
+    overflowWrap: 'anywhere',
                             }}
                           >
                             {item.checklist_itens.itens.descricao}
@@ -1671,6 +1737,9 @@ setTela('rotina')
   whiteSpace: 'nowrap',
   textAlign: 'center',
   cursor: 'pointer',
+  outline: 'none',
+appearance: 'none',
+WebkitAppearance: 'none',
 }}
                           >
                             ✓ CONFORME
@@ -1692,15 +1761,26 @@ setTela('rotina')
     )
   }}
   style={{
-    flex: 1,
-    background:
-  item.resposta === 'NAO_SE_APLICA'
-    ? '#7a1f2b'
-    : '#243244',
-    color: '#ffffff',
-    fontWeight: 800,
-    cursor: 'pointer',
-  }}
+  flex: '1 1 0',
+  minWidth: 0,
+  padding: '10px 4px',
+  border: 0,
+  borderRadius: '10px',
+  background:
+    item.resposta === 'NAO_SE_APLICA'
+      ? '#7a1f2b'
+      : '#243244',
+  color: '#ffffff',
+  fontWeight: 800,
+  fontSize: 'clamp(9px, 2.7vw, 13px)',
+  lineHeight: 1.1,
+  whiteSpace: 'nowrap',
+  textAlign: 'center',
+  cursor: 'pointer',
+  outline: 'none',
+  appearance: 'none',
+  WebkitAppearance: 'none',
+}}
 >
   — NÃO SE APLICA
 
@@ -1738,6 +1818,9 @@ setTela('rotina')
   whiteSpace: 'nowrap',
   textAlign: 'center',
   cursor: 'pointer',
+  outline: 'none',
+appearance: 'none',
+WebkitAppearance: 'none',
 }}
                           >
                             ✕ NÃO CONFORME
@@ -2309,7 +2392,6 @@ input {
   background: var(--ao-surface);
   border: 1px solid var(--ao-border);
   box-shadow: 0 30px 90px rgba(0,0,0,.20);
-}ox-shadow: 0 30px 90px rgba(0,0,0,.50);
 }
 
 .brand {
@@ -2711,7 +2793,6 @@ input {
   display: flex;
   flex-direction: column;
   justify-content: center;
-}tent: center;
 }
 
 .card-label {
@@ -2952,11 +3033,53 @@ input {
 }
 
 .environment-card {
-  padding: 28px;
- background: var(--ao-card-dark);
-border: 1px solid var(--ao-border);
-  border: 1px solid var(--ao-border);
+  width: 100%;
+  box-sizing: border-box;
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 28px;
+  background: var(--ao-card-dark);
+  border: 1px solid var(--ao-border);
+}
+
+.environment-card > div:first-child {
+  width: 100%;
+  margin-top: 0 !important;
+}
+
+.environment-card canvas {
+  width: min(100%, 280px) !important;
+  max-width: 280px !important;
+  height: auto !important;
+  display: block;
+  margin: 0 auto;
+}
+
+.checklist-direct .environment-header,
+.checklist-direct .environment-card,
+.checklist-direct .next-card > div:first-child {
+  display: none;
+}
+
+.checklist-direct .next-card {
+  margin-top: 0;
+}
+
+.back-button {
+  padding: 11px 16px;
+}
+
+.environment-header h1 {
+  margin: 5px 0 0;
+  color: var(--ao-text);
+}
+
+.environment-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 10px 25px 50px;
+}
 
 .environment-icon {
   flex-shrink: 0;
@@ -3023,13 +3146,32 @@ border: 1px solid var(--ao-border);
 
 @media (max-width: 800px) {
 
+.routine-items-list {
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.routine-items-list {
+  width: 100%;
+  gap: 10px !important;
+}
+
+.routine-items-list .routine-item-card {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px !important;
+}
+
   .topbar {
   width: 100%;
   min-width: 0;
   padding: 12px 14px;
   gap: 10px;
   overflow: hidden;
-  .environment-page .next-card + section button {
+}
+
+.environment-page .next-card + section button {
   width: 100% !important;
   min-width: 0 !important;
   flex: 1 1 100% !important;
@@ -3038,14 +3180,14 @@ border: 1px solid var(--ao-border);
 }
 
 .environment-page .next-card + section > div {
+  width: 100%;
   min-width: 0;
 }
 
 .environment-page .next-card + section > div > div {
+  width: 100%;
   min-width: 0;
 }
-}
-
   .brand-subtitle {
     display: none;
   }
@@ -3061,6 +3203,7 @@ border: 1px solid var(--ao-border);
   .main {
   width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
   padding: 30px 17px;
   overflow-x: hidden;
 }
@@ -3110,124 +3253,52 @@ border: 1px solid var(--ao-border);
    CABEÇALHO DA ROTINA
 ========================= */
 
-.routine-header {
+
+  .next-card {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* =========================
+   ROTINA - MOBILE
+========================= */
+
+.routine-item-card {
   width: 100%;
-  max-width: 100%;
-  padding: 16px 14px !important;
-  box-sizing: border-box;
+  padding: 16px !important;
+  border-radius: 15px !important;
+}
+
+.routine-item-header {
+  width: 100%;
   gap: 10px !important;
 }
 
-.routine-header .back-button {
-  width: auto;
-  min-width: 82px;
-  padding: 9px 13px;
-  font-size: 12px;
-  flex-shrink: 0;
-}
-
-.routine-header-info {
+.routine-item-content {
   width: 100%;
   min-width: 0;
-  overflow: hidden;
 }
 
-.routine-header-info .eyebrow {
-  display: block;
-  font-size: 9px;
-  line-height: 1.2;
-}
-
-.routine-header-info h1 {
-  margin: 5px 0 3px !important;
-  font-size: 24px !important;
-  line-height: 1.15 !important;
-  font-weight: 800;
+.routine-item-content h3 {
+  font-size: 16px !important;
+  line-height: 1.35;
   word-break: break-word;
-  overflow-wrap: anywhere;
 }
 
-.routine-header-info p {
-  margin: 0 !important;
+.routine-item-content p {
   font-size: 13px !important;
-  line-height: 1.35 !important;
+  line-height: 1.45;
   word-break: break-word;
 }
-  .next-card {
-    flex-direction: column;
-    align-items: flex-start;
-    
-      /* =========================
-     ROTINA - MOBILE
-  ========================= */
-
-  .routine-item-card {
-    width: 100%;
-    padding: 16px !important;
-    border-radius: 15px !important;
-  }
-
-  .routine-item-header {
-    width: 100%;
-    gap: 10px !important;
-  }
-
-  .routine-item-content {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .routine-item-content h3 {
-    font-size: 16px !important;
-    line-height: 1.35;
-    word-break: break-word;
-  }
-
-  .routine-item-content p {
-    font-size: 13px !important;
-    line-height: 1.45;
-    word-break: break-word;
-  }
-  }
 }
 
 @media (max-width: 520px) {
-.routine-header {
-  padding: 14px 12px !important;
-}
 
-.routine-header .back-button {
-  min-width: 78px;
-  padding: 8px 11px;
-  font-size: 11px;
-}
-
-.routine-header-info h1 {
-  font-size: 21px !important;
-}
-
-.routine-header-info p {
-  font-size: 12px !important;
-}
   .login-card {
     padding: 28px 22px;
   }
-  .routine-item-card {
-    padding: 14px !important;
-    border-radius: 14px !important;
-  }
-
-  .routine-item-header {
-    gap: 9px !important;
-  }
-
-  .routine-item-content h3 {
-    font-size: 15px !important;
-  }
-
-  .routine-item-content p {
-    font-size: 12px !important;
-  }
+ 
+  
   .brand-title {
     font-size: 14px;
   }
