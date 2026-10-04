@@ -1734,12 +1734,18 @@ setTela('rotina')
   fontWeight: 800,
   fontSize: 'clamp(9px, 2.7vw, 13px)',
   lineHeight: 1.1,
-  whiteSpace: 'nowrap',
-  textAlign: 'center',
-  cursor: 'pointer',
-  outline: 'none',
+ whiteSpace: 'normal',
+textAlign: 'center',
+cursor: 'pointer',
+outline: 'none',
+boxShadow: 'none',
 appearance: 'none',
 WebkitAppearance: 'none',
+WebkitTapHighlightColor: 'transparent',
+display: 'flex',
+alignItems: 'center',
+justifyContent: 'center',
+minHeight: '52px',
 }}
                           >
                             ✓ CONFORME
@@ -1774,12 +1780,18 @@ WebkitAppearance: 'none',
   fontWeight: 800,
   fontSize: 'clamp(9px, 2.7vw, 13px)',
   lineHeight: 1.1,
-  whiteSpace: 'nowrap',
-  textAlign: 'center',
-  cursor: 'pointer',
-  outline: 'none',
-  appearance: 'none',
-  WebkitAppearance: 'none',
+  whiteSpace: 'normal',
+textAlign: 'center',
+cursor: 'pointer',
+outline: 'none',
+boxShadow: 'none',
+appearance: 'none',
+WebkitAppearance: 'none',
+WebkitTapHighlightColor: 'transparent',
+display: 'flex',
+alignItems: 'center',
+justifyContent: 'center',
+minHeight: '52px',
 }}
 >
   — NÃO SE APLICA
@@ -1815,12 +1827,18 @@ WebkitAppearance: 'none',
   fontWeight: 800,
   fontSize: 'clamp(9px, 2.7vw, 13px)',
   lineHeight: 1.1,
-  whiteSpace: 'nowrap',
-  textAlign: 'center',
-  cursor: 'pointer',
-  outline: 'none',
+  whiteSpace: 'normal',
+textAlign: 'center',
+cursor: 'pointer',
+outline: 'none',
+boxShadow: 'none',
 appearance: 'none',
 WebkitAppearance: 'none',
+WebkitTapHighlightColor: 'transparent',
+display: 'flex',
+alignItems: 'center',
+justifyContent: 'center',
+minHeight: '52px',
 }}
                           >
                             ✕ NÃO CONFORME
@@ -3203,18 +3221,27 @@ input {
 .routine-item-content {
   width: 100%;
   min-width: 0;
+  overflow: hidden;
+  text-align: left;
 }
 
 .routine-item-content h3 {
+  margin: 0 !important;
   font-size: 16px !important;
-  line-height: 1.35;
-  word-break: break-word;
+  line-height: 1.25 !important;
+  font-weight: 800;
+  text-align: left;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 .routine-item-content p {
+  margin: 7px 0 0 !important;
   font-size: 13px !important;
-  line-height: 1.45;
-  word-break: break-word;
+  line-height: 1.4 !important;
+  text-align: left;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 
