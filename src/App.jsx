@@ -1699,7 +1699,7 @@ setTela('rotina')
   <div
   style={{
     display: 'grid',
-    gridTemplateColumns: '1fr 1.25fr 1fr',
+  gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
     gap: '6px',
     marginTop: '16px',
     width: '100%',
@@ -1726,7 +1726,7 @@ setTela('rotina')
                               )
                             }}
                             style={{
-  flex: '1 1 0',
+  
   minWidth: 0,
   padding: '10px 4px',
   border: 0,
@@ -1774,7 +1774,7 @@ minHeight: '52px',
     )
   }}
   style={{
-  flex: '1 1 0',
+  
   minWidth: 0,
   padding: '10px 2px',
   border: 0,
@@ -1823,7 +1823,7 @@ minHeight: '52px',
                               )
                             }}
                             style={{
-  flex: '1 1 0',
+  
   minWidth: 0,
   padding: '10px 4px',
   border: 0,
