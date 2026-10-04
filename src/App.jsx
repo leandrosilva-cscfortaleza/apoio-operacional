@@ -1660,13 +1660,11 @@ setTela('rotina')
                       <div
   className="routine-item-content"
   style={{
-    flex: 1,
-    minWidth: 0,
-    width: '100%',
-    maxWidth: '100%',
-    boxSizing: 'border-box',
-    overflow: 'visible',
-  }}
+  flex: 1,
+  minWidth: 0,
+  boxSizing: 'border-box',
+  overflow: 'visible',
+}}
 >
                         <h3
   style={{
@@ -1680,7 +1678,7 @@ setTela('rotina')
     width: '100%',
                           }}
                         >
-                          {item.checklist_itens?.itens?.nome}
+                          [{item.checklist_itens?.itens?.nome}]
                         </h3>
 
                         {item.checklist_itens?.itens?.descricao && (
@@ -3230,9 +3228,8 @@ input {
 }
 
 .routine-item-content {
-  width: 100%;
   min-width: 0;
- overflow: visible;
+  overflow: visible;
   text-align: left;
 }
 
