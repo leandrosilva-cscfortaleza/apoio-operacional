@@ -2034,27 +2034,7 @@ WebkitAppearance: 'none',
 </button>
 
 
-              <div className="qr-symbol">
-                <span>
-                  ▣
-                </span>
-              </div>
-
-              <div className="qr-content">
-
-                <span className="qr-title">
-                  LER QR CODE
-                </span>
-
-                <span className="qr-description">
-                  Acesse a rotina do ambiente
-                </span>
-
-              </div>
-
-              <div className="qr-arrow">
-                →
-              </div>
+              
 
            
 
@@ -2568,13 +2548,7 @@ input {
   transform: translateY(-1px);
 }
 
-.login-footer {
-  margin-top: 28px;
-  text-align: center;
-  color: var(--ao-text-muted);
-  font-size: 10px;
-  letter-spacing: 1.5px;
-}
+
 
 /* =========================
    HOME
@@ -2746,7 +2720,7 @@ input {
   filter: brightness(1.06);
 }
 
-.qr-symbol {
+.qr-icon {
   width: 68px;
   height: 68px;
   flex-shrink: 0;
@@ -2755,9 +2729,6 @@ input {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.qr-symbol span {
   font-size: 34px;
   font-weight: 900;
 }
@@ -2990,47 +2961,9 @@ input {
   align-items: center;
   gap: 22px;
 }
-.environment-card {
-  flex-direction: column;
-  align-items: stretch;
-  padding: 20px;
-}
 
-.environment-card > div:first-child {
-  width: 100%;
-  margin-top: 0 !important;
-}
 
-.environment-card canvas {
-  width: min(100%, 280px) !important;
-  max-width: 280px !important;
-  height: auto !important;
-  display: block;
-  margin: 0 auto;
-}
-  .checklist-direct .environment-header,
-.checklist-direct .environment-card,
-.checklist-direct .next-card > div:first-child {
-  display: none;
-}
 
-.checklist-direct .next-card {
-  margin-top: 0;
-}
-.back-button {
-  padding: 11px 16px;
-}
-
-.environment-header h1 {
-  margin: 5px 0 0;
-  color: var(--ao-text);
-}
-
-.environment-content {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 10px 25px 50px;
-}
 
 .environment-card {
   width: 100%;
@@ -3129,7 +3062,7 @@ input {
 }
 
 .next-card p {
-  color: #64748b;
+  color: var(--ao-text-muted);
   max-width: 620px;
   line-height: 1.5;
   font-size: 13px;
@@ -3146,22 +3079,13 @@ input {
 
 @media (max-width: 800px) {
 
-.routine-items-list {
-  box-sizing: border-box;
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-.routine-items-list {
-  width: 100%;
-  gap: 10px !important;
-}
-
 .routine-items-list .routine-item-card {
   width: 100%;
   box-sizing: border-box;
   padding: 14px !important;
 }
+
+
 
   .topbar {
   width: 100%;
@@ -3265,6 +3189,8 @@ input {
 
 .routine-item-card {
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   padding: 16px !important;
   border-radius: 15px !important;
 }
@@ -3290,7 +3216,7 @@ input {
   line-height: 1.45;
   word-break: break-word;
 }
-}
+
 
 @media (max-width: 520px) {
 
@@ -3316,10 +3242,10 @@ input {
     padding: 22px;
   }
 
-  .qr-symbol {
-    width: 58px;
-    height: 58px;
-  }
+  .qr-icon {
+  width: 58px;
+  height: 58px;
+}
 
   .qr-title {
     font-size: 19px;
