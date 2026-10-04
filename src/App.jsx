@@ -1676,6 +1676,7 @@ setTela('rotina')
     fontWeight: 800,
     wordBreak: 'break-word',
     overflowWrap: 'anywhere',
+    width: '100%',
                           }}
                         >
                           {item.checklist_itens?.itens?.nome}
@@ -1773,48 +1774,36 @@ minHeight: '52px',
     )
   }}
   style={{
-  
-  minWidth: 0,
-  padding: '10px 2px',
-  border: 0,
-  borderRadius: '10px',
-  background:
-    item.resposta === 'NAO_SE_APLICA'
-      ? '#7a1f2b'
-      : '#243244',
-  color: '#ffffff',
-  fontWeight: 800,
- fontSize: 'clamp(8px, 2.5vw, 12px)',
-lineHeight: 1.15,
-whiteSpace: 'normal',
-overflowWrap: 'anywhere',
-wordBreak: 'normal',
-textAlign: 'center',
-cursor: 'pointer',
-outline: 'none',
-boxShadow: 'none',
-appearance: 'none',
-WebkitAppearance: 'none',
-WebkitTapHighlightColor: 'transparent',
-display: 'grid',
-placeItems: 'center',
-minHeight: '52px',
-}}
+    width: '100%',
+    minWidth: 0,
+    padding: '8px 4px',
+    border: 0,
+    borderRadius: '10px',
+    background:
+      item.resposta === 'NAO_SE_APLICA'
+        ? '#7a1f2b'
+        : '#243244',
+    color: '#ffffff',
+    fontWeight: 800,
+    fontSize: '11px',
+    lineHeight: 1.15,
+    textAlign: 'center',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '64px',
+    whiteSpace: 'normal',
+    wordBreak: 'break-word',
+    overflowWrap: 'break-word',
+    overflow: 'visible',
+    boxSizing: 'border-box',
+  }}
 >
- 
-  <span
-    style={{
-      display: 'block',
-      width: '100%',
-      minWidth: 0,
-      whiteSpace: 'normal',
-      overflowWrap: 'anywhere',
-      wordBreak: 'normal',
-      textAlign: 'center',
-      lineHeight: 1.15,
-    }}
-  >
-    — NÃO SE APLICA
+  <span>
+    − NÃO
+    <br />
+    SE APLICA
   </span>
 </button>
                           <button
