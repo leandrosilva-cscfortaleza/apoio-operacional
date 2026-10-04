@@ -1680,7 +1680,7 @@ setTela('rotina')
     width: '100%',
                           }}
                         >
-                          [{item.checklist_itens?.itens?.nome}]
+                          {item.checklist_itens?.itens?.nome}
                         </h3>
 
                         {item.checklist_itens?.itens?.descricao && (
