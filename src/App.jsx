@@ -1676,7 +1676,7 @@ fontWeight: 700,
                           }}
                         >
                          
-                          [{item.checklist_itens?.itens?.nome}]
+                          {"\u200B"}{item.checklist_itens?.itens?.nome}
                         </h3>
 
                         {item.checklist_itens?.itens?.descricao && (
