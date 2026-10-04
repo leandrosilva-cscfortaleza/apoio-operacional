@@ -1675,7 +1675,8 @@ lineHeight: 1.3,
 fontWeight: 700,
                           }}
                         >
-                          {item.checklist_itens?.itens?.nome}
+                          // Workaround para bug de renderização no Chrome mobile o correto e semos []
+                          [{item.checklist_itens?.itens?.nome}]
                         </h3>
 
                         {item.checklist_itens?.itens?.descricao && (
