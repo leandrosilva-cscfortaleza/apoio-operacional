@@ -1627,13 +1627,13 @@ setTela('rotina')
   padding: '20px',
 }}
 >
-
-                    <div
+<div
   className="routine-item-header"
   style={{
     display: 'flex',
     gap: '14px',
     alignItems: 'flex-start',
+    width: '100%',
   }}
 >
 
@@ -1659,13 +1659,14 @@ setTela('rotina')
 
                       <div
   className="routine-item-content"
- style={{
-  flex: '1 1 0',
-  minWidth: 0,
-  width: 'auto',
-  maxWidth: '100%',
-  boxSizing: 'border-box',
-}}
+  style={{
+    flex: 1,
+    minWidth: 0,
+    width: '100%',
+    maxWidth: '100%',
+    boxSizing: 'border-box',
+    overflow: 'visible',
+  }}
 >
                         <h3
   style={{
@@ -3290,6 +3291,23 @@ input {
 
   .qr-arrow {
     font-size: 24px;
+
+    .routine-item-header {
+  width: 100%;
+}
+
+.routine-item-content {
+  flex: 1;
+  overflow: visible;
+}
+
+.routine-item-content h3 {
+  display: block;
+  width: 100%;
+  overflow: visible;
+  white-space: normal;
+  text-overflow: unset;
+}
   }
 }
 `
