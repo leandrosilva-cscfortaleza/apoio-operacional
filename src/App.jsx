@@ -1659,11 +1659,13 @@ setTela('rotina')
 
                       <div
   className="routine-item-content"
-  style={{
-   flex: 1,
-    minWidth: 0,
-    width: '100%',
-  }}
+ style={{
+  flex: '1 1 0',
+  minWidth: 0,
+  width: 'auto',
+  maxWidth: '100%',
+  boxSizing: 'border-box',
+}}
 >
                         <h3
   style={{
@@ -1696,12 +1698,15 @@ setTela('rotina')
 
   <div
   style={{
-    display: 'flex',
+    display: 'grid',
+    gridTemplateColumns: '1fr 1.25fr 1fr',
     gap: '6px',
     marginTop: '16px',
     width: '100%',
     alignItems: 'stretch',
+    boxSizing: 'border-box',
   }}
+
 >
 
                           <button
@@ -1732,8 +1737,10 @@ setTela('rotina')
       : '#243244',
   color: '#ffffff',
   fontWeight: 800,
-  fontSize: 'clamp(9px, 2.7vw, 13px)',
+  fontSize: 'clamp(10px, 2.9vw, 12px)',
   lineHeight: 1.1,
+  overflow: 'hidden',
+textOverflow: 'clip',
  whiteSpace: 'normal',
 textAlign: 'center',
 cursor: 'pointer',
@@ -1827,7 +1834,9 @@ minHeight: '52px',
       : '#243244',
   color: '#ffffff',
   fontWeight: 800,
-  fontSize: 'clamp(9px, 2.7vw, 13px)',
+ fontSize: 'clamp(10px, 2.9vw, 12px)',
+ overflow: 'hidden',
+textOverflow: 'clip',
   lineHeight: 1.1,
   whiteSpace: 'normal',
 textAlign: 'center',
