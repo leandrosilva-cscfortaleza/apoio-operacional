@@ -1769,7 +1769,7 @@ minHeight: '52px',
   style={{
   flex: '1 1 0',
   minWidth: 0,
-  padding: '10px 4px',
+  padding: '10px 2px',
   border: 0,
   borderRadius: '10px',
   background:
@@ -1778,9 +1778,11 @@ minHeight: '52px',
       : '#243244',
   color: '#ffffff',
   fontWeight: 800,
-  fontSize: 'clamp(9px, 2.7vw, 13px)',
-  lineHeight: 1.1,
-  whiteSpace: 'normal',
+ fontSize: 'clamp(8px, 2.5vw, 12px)',
+lineHeight: 1.15,
+whiteSpace: 'normal',
+overflowWrap: 'anywhere',
+wordBreak: 'normal',
 textAlign: 'center',
 cursor: 'pointer',
 outline: 'none',
@@ -3221,7 +3223,7 @@ input {
 .routine-item-content {
   width: 100%;
   min-width: 0;
-  overflow: hidden;
+ overflow: visible;
   text-align: left;
 }
 
