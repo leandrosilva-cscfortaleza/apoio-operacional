@@ -1668,14 +1668,11 @@ setTela('rotina')
 >
                         <h3
   style={{
-    margin: 0,
-    color: '#ffffff',
-    fontSize: 'clamp(15px, 4.2vw, 18px)',
-    lineHeight: 1.3,
-    fontWeight: 800,
-    wordBreak: 'break-word',
-    overflowWrap: 'break-word',
-    width: '100%',
+margin: 0,
+color: '#ffffff',
+fontSize: 'clamp(15px, 4.2vw, 18px)',
+lineHeight: 1.3,
+fontWeight: 700,
                           }}
                         >
                           {item.checklist_itens?.itens?.nome}
