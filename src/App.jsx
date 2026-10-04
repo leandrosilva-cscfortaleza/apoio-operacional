@@ -1801,8 +1801,21 @@ placeItems: 'center',
 minHeight: '52px',
 }}
 >
-  — NÃO SE APLICA
-
+ 
+  <span
+    style={{
+      display: 'block',
+      width: '100%',
+      minWidth: 0,
+      whiteSpace: 'normal',
+      overflowWrap: 'anywhere',
+      wordBreak: 'normal',
+      textAlign: 'center',
+      lineHeight: 1.15,
+    }}
+  >
+    — NÃO SE APLICA
+  </span>
 </button>
                           <button
                             type="button"
