@@ -1676,7 +1676,7 @@ setTela('rotina')
     lineHeight: 1.3,
     fontWeight: 800,
     wordBreak: 'break-word',
-    overflowWrap: 'anywhere',
+    overflowWrap: 'break-word',
     width: '100%',
                           }}
                         >
